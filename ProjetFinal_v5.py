@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from pylab import *
 from scipy.stats import linregress
 from math import *
-
+#Salut Romain
 #Moyenne des températures d'une année à Paris
 def moyenne_paris(annee):
     fichier = open('TM_PARIS.csv','r')
