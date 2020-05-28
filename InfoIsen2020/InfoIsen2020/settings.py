@@ -37,9 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',   
+    'django.contrib.staticfiles', 
+    
+    'rest_framework',
+
     #mesApps
     'appUser.apps.AppuserConfig',
+    'api.apps.ApiConfig',
+    'appFront.apps.AppfrontConfig',
 ]
 
 MIDDLEWARE = [
@@ -132,3 +137,11 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = [
     os.path.join(BASE_DIR,"static/images"),
 ]
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

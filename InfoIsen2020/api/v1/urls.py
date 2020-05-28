@@ -1,4 +1,4 @@
-"""InfoIsen2020 URL Configuration
+"""djangoProject URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -15,13 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
+
+from . import views
+
+from rest_framework import routers
+
+router = routers.DefaultRouter()
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('api.urls'), name='api'),
+    #path('', include(router.urls), name='api.v1.router'),
+
+    path('login/', views.login, name='api.v1.login'),
+    path('register/', views.register, name='api.v1.register'),
+    path('logout/', views.logout, name='api.v1.logout'),
+    path('user_info/', views.user_info, name='api.v1.user_info'),
+
+    path('TennisPlayer_list/', views.TennisPlayerView.TennisPlayer_list, name='api.v1.TennisPlayer_list'),
 
 
-    path('user/', include('appUser.urls'), name='appUser'),
-    #path('front/', include('appFront.urls'), name='appFront'),
 ]
