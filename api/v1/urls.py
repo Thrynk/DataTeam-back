@@ -21,6 +21,7 @@ from . import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
+a=0
 
 urlpatterns = [
     #path('', include(router.urls), name='api.v1.router'),
