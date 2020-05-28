@@ -12,8 +12,6 @@ from rest_framework import viewsets
 import json
 
 from api.forms import LoginForm, RegisterForm
-from __divers__.perso import Button,URL
-from __divers__.decorators import logout_required
 
 from .serializers import UserSerializer
 

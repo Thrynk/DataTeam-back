@@ -9,8 +9,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout as auth_logout, login as auth_login
 
 from api.forms import LoginForm, RegisterForm
-from __divers__.perso import Button,URL
-from __divers__.decorators import logout_required
 
 from django.http import QueryDict
 from django.http import JsonResponse

@@ -42,9 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     #mesApps
-    'appUser.apps.AppuserConfig',
     'api.apps.ApiConfig',
-    'appFront.apps.AppfrontConfig',
 ]
 
 MIDDLEWARE = [
