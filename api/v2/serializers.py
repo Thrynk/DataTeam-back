@@ -2,10 +2,37 @@ from rest_framework import serializers
 
 #from .models import Hero
 from django.contrib.auth.models import User
+import api.models as my_models
+
 
 #class UserSerializer(serializers.HyperlinkedModelSerializer):
 #class UserSerializer(serializers.Serializer):
-class UserSerializer(serializers.ModelSerializer):
+class TennisPlayerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id','username','email']
+        model = my_models.TennisPlayer
+        fields = '__all__'
+
+class MatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = my_models.Match
+        fields = '__all__'
+
+class MatchStatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = my_models.MatchStats
+        fields = '__all__'
+
+class TennisPlayerStatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = my_models.TennisPlayerStats
+        fields = '__all__'
+
+class TournamentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = my_models.Tournament
+        fields = '__all__'
+
+class TournamentEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = my_models.TournamentEvent
+        fields = '__all__'

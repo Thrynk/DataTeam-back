@@ -22,13 +22,7 @@ from rest_framework import routers
 from . import v1
 from . import v2
 
-
-router = routers.DefaultRouter()
-#router.register('users_list', viewsSerializers.usersListViewSet)
-
 urlpatterns = [
-    path('routeur/', include(router.urls), name='api.router'),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'), name='api.rest_framework'),
 
     path('v1/', include('api.v1.urls'), name='api.v1'),
     path('v2/', include('api.v2.urls'), name='api.v2'),

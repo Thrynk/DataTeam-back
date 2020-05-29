@@ -16,19 +16,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from . import viewsSerializers
+from . import views
 
 from rest_framework import routers
-
-
+from rest_framework.urlpatterns import format_suffix_patterns
 router = routers.DefaultRouter()
-router.register('users_list', viewsSerializers.usersListViewSet)
+#router.register('users_list', viewsSerializers.usersListViewSet)
+
 
 urlpatterns = [
     path('', include(router.urls), name='api.router'),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'), name='api.rest_framework'),
     
-    path('user_list/', viewsSerializers.users_list, name='api.users_list'),
-
+    path('tennisPlayers/', views.tennisPlayer_list,name='tennisPlayer_list'),
+    path('tennisPlayer/<str:pk>', views.tennisPlayer_detail,name='tennisPlayer_detail'),
 
 
 ]
+
+#urlpatterns = format_suffix_patterns(urlpatterns)
