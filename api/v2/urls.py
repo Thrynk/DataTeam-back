@@ -20,16 +20,17 @@ from . import views
 
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
+
 router = routers.DefaultRouter()
 #router.register('users_list', viewsSerializers.usersListViewSet)
 
 
 urlpatterns = [
-    path('', include(router.urls), name='api.router'),
+    #path('', include(router.urls), name='api.router'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'), name='api.rest_framework'),
     
-    path('tennisPlayers/', views.tennisPlayer_list,name='tennisPlayer_list'),
-    path('tennisPlayer/<str:pk>', views.tennisPlayer_detail,name='tennisPlayer_detail'),
+    path('tennisPlayers/', views.tennisPlayer_list,name='api.tennisPlayer_list'),
+    path('tennisPlayer/<str:pk>', views.tennisPlayer_detail,name='api.tennisPlayer_detail'),
 
 
 ]

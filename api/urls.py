@@ -26,6 +26,7 @@ urlpatterns = [
 
     path('v1/', include('api.v1.urls'), name='api.v1'),
     path('v2/', include('api.v2.urls'), name='api.v2'),
+    path('v3/', include('api.v3.urls'), name='api.v3'),
 
     #path('', include(router.urls), name='api.router'),
 ]
