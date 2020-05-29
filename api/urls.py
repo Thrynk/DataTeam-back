@@ -1,4 +1,4 @@
-"""djangoProject URL Configuration
+"""azerty URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -16,17 +16,27 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-
-from rest_framework import routers
-
-from . import v1
-from . import v2
+from . import views
 
 urlpatterns = [
+    path('overview', views.apiOverview),
 
-    path('v1/', include('api.v1.urls'), name='api.v1'),
-    path('v2/', include('api.v2.urls'), name='api.v2'),
-    path('v3/', include('api.v3.urls'), name='api.v3'),
+    path('tennisPlayers/', views.TennisPlayerList.as_view()),
+    path('tennisPlayers/<str:pk>', views.TennisPlayerDetail.as_view()),
 
-    #path('', include(router.urls), name='api.router'),
+    path('tennisPlayerStats/', views.TennisPlayerStatsList.as_view()),
+    path('tennisPlayerStats/<str:pk>', views.TennisPlayerStatsDetail.as_view()),
+
+    path('Tournaments/', views.TournamentList.as_view()),
+    path('Tournaments/<str:pk>', views.TournamentDetail.as_view()),
+
+    path('TournamentEvents/', views.TournamentEventList.as_view()),
+    path('TournamentEvents/<str:pk>', views.TournamentEventDetail.as_view()),
+
+    path('Matchs/', views.MatchList.as_view()),
+    path('Matchs/<str:pk>', views.MatchDetail.as_view()),
+
+    path('MatchStats/', views.MatchStatsList.as_view()),
+    path('MatchStats/<str:pk>', views.MatchStatsDetail.as_view()),
+
 ]

@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 #from .models import Hero
 from django.contrib.auth.models import User
-from api import models as my_models
+from . import models as my_models
 
 
 #class UserSerializer(serializers.HyperlinkedModelSerializer):

@@ -1,5 +1,5 @@
 """
-ASGI config for InfoIsen2020 project.
+ASGI config for azerty project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'InfoIsen2020.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'azerty.settings')
 
 application = get_asgi_application()

@@ -1,4 +1,4 @@
-"""djangoProject URL Configuration
+"""azerty URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -16,23 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from . import views
-
-from rest_framework import routers
-from rest_framework.urlpatterns import format_suffix_patterns
-
-router = routers.DefaultRouter()
-#router.register('users_list', viewsSerializers.usersListViewSet)
-
-
 urlpatterns = [
-    #path('', include(router.urls), name='api.router'),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'), name='api.rest_framework'),
-    
-    path('tennisPlayers/', views.tennisPlayer_list,name='api.tennisPlayer_list'),
-    path('tennisPlayer/<str:pk>', views.tennisPlayer_detail,name='api.tennisPlayer_detail'),
-
+    path('admin/', admin.site.urls),
+    path('api/', include('api.urls')),
 
 ]
-
-#urlpatterns = format_suffix_patterns(urlpatterns)
