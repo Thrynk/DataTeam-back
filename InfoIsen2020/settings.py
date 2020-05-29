@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     #mesApps
     'api.apps.ApiConfig',
+
 ]
 
 MIDDLEWARE = [
