@@ -15,28 +15,38 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
 from . import views
+from . import viewSets
+
+routeur = DefaultRouter()
+routeur.register('tennisPlayer', viewSets.TennisPlayerViewSet)
+routeur.register('tennisPlayerStats', viewSets.TennisPlayerStatsViewSet)
+routeur.register('Match', viewSets.MatchViewSet)
+routeur.register('MatchStats', viewSets.MatchStatsViewSet)
+routeur.register('Tournament', viewSets.TournamentViewSet)
+routeur.register('TournamentEvent', viewSets.TournamentEventViewSet)
 
 urlpatterns = [
-    path('overview', views.apiOverview),
+    path('viewSets/', include(routeur.urls)),
 
-    path('tennisPlayers/', views.TennisPlayerList.as_view()),
-    path('tennisPlayers/<str:pk>', views.TennisPlayerDetail.as_view()),
+    #path('tennisPlayers/', views.TennisPlayerList.as_view()),
+    #path('tennisPlayers/<str:pk>', views.TennisPlayerDetail.as_view()),
 
-    path('tennisPlayerStats/', views.TennisPlayerStatsList.as_view()),
-    path('tennisPlayerStats/<str:pk>', views.TennisPlayerStatsDetail.as_view()),
+    #path('tennisPlayerStats/', views.TennisPlayerStatsList.as_view()),
+    #path('tennisPlayerStats/<str:pk>', views.TennisPlayerStatsDetail.as_view()),
 
-    path('Tournaments/', views.TournamentList.as_view()),
-    path('Tournaments/<str:pk>', views.TournamentDetail.as_view()),
+    #path('tournaments/', views.TournamentList.as_view()),
+    #path('tournaments/<str:pk>', views.TournamentDetail.as_view()),
 
-    path('TournamentEvents/', views.TournamentEventList.as_view()),
-    path('TournamentEvents/<str:pk>', views.TournamentEventDetail.as_view()),
+    #path('tournamentEvents/', views.TournamentEventList.as_view()),
+    #path('tournamentEvents/<str:pk>', views.TournamentEventDetail.as_view()),
 
-    path('Matchs/', views.MatchList.as_view()),
-    path('Matchs/<str:pk>', views.MatchDetail.as_view()),
+    #path('matchs/', views.MatchList.as_view()),
+    #path('matchs/<str:pk>', views.MatchDetail.as_view()),
 
-    path('MatchStats/', views.MatchStatsList.as_view()),
-    path('MatchStats/<str:pk>', views.MatchStatsDetail.as_view()),
+    #path('matchStats/', views.MatchStatsList.as_view()),
+    #path('matchStats/<str:pk>', views.MatchStatsDetail.as_view()),
 
 ]

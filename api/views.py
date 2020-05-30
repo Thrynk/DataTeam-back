@@ -14,9 +14,6 @@ from .serializers import *
 
 # Create your views here.
 
-def apiOverview(request):
-    return JsonResponse('TEST', safe=False)
-
 ####################################################################################
 class TennisPlayerList(APIView):
 
