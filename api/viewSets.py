@@ -16,29 +16,44 @@ from .serializers import *
 # Create your views here.
 
 class TennisPlayerViewSet(viewsets.ModelViewSet):
-    queryset = TennisPlayer.objects.all()
     serializer_class = TennisPlayerSerializer
+    model=TennisPlayer
+    queryset = model.objects.all().order_by('name')
+
+    def get_queryset(self):
+            parms = self.request.GET.dict()
+            print(parms)
+            name=self.request.GET.get('name')
+            if name is not None:
+                self.queryset = self.queryset.filter(name=name)
+            return self.queryset
 
 class TournamentViewSet(viewsets.ModelViewSet):
-    queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
+    model=Tournament
+    queryset = model.objects.all()
 
 class TournamentEventViewSet(viewsets.ModelViewSet):
-    queryset = TournamentEvent.objects.all()
     serializer_class = TournamentEventSerializer
+    model=TournamentEvent
+    queryset = model.objects.all()
 
 class TournamentEventViewSet(viewsets.ModelViewSet):
-    queryset = TournamentEvent.objects.all()
     serializer_class = TournamentEventSerializer
+    model=TournamentEvent
+    queryset = model.objects.all()
 
 class MatchViewSet(viewsets.ModelViewSet):
-    queryset = Match.objects.all()
     serializer_class = MatchSerializer
+    model=Match
+    queryset = model.objects.all()
 
 class MatchStatsViewSet(viewsets.ModelViewSet):
-    queryset = MatchStats.objects.all()
     serializer_class = MatchStatsSerializer
+    model=MatchStats
+    queryset = model.objects.all()
 
 class TennisPlayerStatsViewSet(viewsets.ModelViewSet):
-    queryset = TennisPlayerStats.objects.all()
     serializer_class = TennisPlayerStatsSerializer
+    model=MatchStats
+    queryset = TennisPlayerStats.objects.all()
