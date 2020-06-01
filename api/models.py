@@ -13,8 +13,6 @@ class TennisPlayer(models.Model):
 class Tournament(models.Model):
     name = models.CharField(max_length=15)
     surface = models.CharField(max_length=15)
-    city = models.CharField(max_length=15)
-    date = models.DateField()
 
     def __str__(self):
         return self.name 
