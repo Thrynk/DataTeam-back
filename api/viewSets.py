@@ -48,10 +48,7 @@ class TennisPlayerViewSet(viewsets.ModelViewSet):
                     if  key not in [field.name for field in self.model._meta.fields if field.null==False]: 
                         del parms[key]
         
-        print(parms)
-        print(parms_possible)
         query = self.model.objects.all().filter(**parms) # si il en existe 1 avec les parametres requis
-        print(query.count())
         if query.count():
             mystatus=status.HTTP_406_NOT_ACCEPTABLE
         else:
