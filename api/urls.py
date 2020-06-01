@@ -21,7 +21,7 @@ from . import views
 from . import viewSets
 
 routeur = DefaultRouter()
-routeur.register('tennisPlayer', viewSets.TennisPlayerViewSet)
+routeur.register('tennisPlayer', viewSets.TennisPlayerViewSet, basename='TennisPlayer')
 routeur.register('tennisPlayerStats', viewSets.TennisPlayerStatsViewSet)
 routeur.register('Match', viewSets.MatchViewSet)
 routeur.register('MatchStats', viewSets.MatchStatsViewSet)
@@ -29,7 +29,7 @@ routeur.register('Tournament', viewSets.TournamentViewSet)
 routeur.register('TournamentEvent', viewSets.TournamentEventViewSet)
 
 urlpatterns = [
-    path('viewSets/', include(routeur.urls)),
+    path('', include(routeur.urls)),
 
     #path('tennisPlayers/', views.TennisPlayerList.as_view()),
     #path('tennisPlayers/<str:pk>', views.TennisPlayerDetail.as_view()),

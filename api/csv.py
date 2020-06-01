@@ -1,6 +1,20 @@
 import csv
+from api.models import *
 
-with open('eggs.csv', newline='') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter=' ', quotechar=',')
-    for row in spamreader:
-        print(', '.join(row))
+TennisPlayer.objetc
+
+def csv_to_bdd(path,modelClass):
+    with open(path) as f:
+        reader = csv.reader(f)
+        for row in reader:
+            try:
+                return modelClass.objects.get(
+                    name=row[1],
+                    firtname=row[2],
+                    )
+            except modelClass.DoesNotExist:
+                 return modelClass.objects.create(
+                    name=row[1],
+                    firtname=row[2],
+                    nationality=row[5],
+                    )
