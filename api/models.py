@@ -13,8 +13,9 @@ class TennisPlayer(models.Model):
 class Tournament(models.Model):
     name = models.CharField(max_length=15)
     surface = models.CharField(max_length=15)
-    city = models.CharField(max_length=15)
-    date = models.DateField()
+    date = models.DateField(null=True, blank=True)
+    city = models.CharField(max_length=15, null=True, blank=True)
+
 
     def __str__(self):
         return self.name 
@@ -24,6 +25,9 @@ class TournamentEvent(models.Model):
     season = models.CharField(max_length=15)
     date = models.DateField()
 
+    def __str__(self):
+        return self.tournament.name
+
 class Match(models.Model):
     winner = models.ForeignKey(TennisPlayer, on_delete=models.CASCADE, related_name="winner")
     loser = models.ForeignKey(TennisPlayer, on_delete=models.CASCADE, related_name="loser")
@@ -31,6 +35,9 @@ class Match(models.Model):
     score = models.CharField(max_length=15)
     date = models.DateField()
     round = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.tournament_event.tournament.name
 
 class MatchStats(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
@@ -46,8 +53,9 @@ class MatchStats(models.Model):
     loser_1st_won = models.IntegerField()
     loser_2st_won = models.IntegerField()
 
+
     def __str__(self):
-        return self.match
+        return self.match.tournament_event.tournament.name
 
 class TennisPlayerStats(models.Model):
     player = models.ForeignKey(TennisPlayer, on_delete=models.CASCADE)
@@ -55,6 +63,6 @@ class TennisPlayerStats(models.Model):
     matches_lost=models.IntegerField()
 
     def __str__(self):
-        return self.player
+        return self.player.name
 
 
