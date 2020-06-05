@@ -14,11 +14,11 @@ from rest_framework import status
 from .models import * 
 from .serializers import * 
 
-####### fonctions #######
+# ----- fonctions ----- #
 
 # renvois les objects en fonctions des parametres de request.GET
-def get_query_perso(self):
-    queryset=self.model.objects.all().order_by('-id')
+def get_query_perso(self,order):
+    queryset=self.model.objects.all().order_by(order)
     parms = self.request.GET.dict()
     if len(list(parms.keys())) > 0 : # si il y a des parametres dans l'url
         for key in list(parms.keys()):
@@ -29,55 +29,36 @@ def get_query_perso(self):
 
 # Create your views here.
 
+# un ViewSets definie le comportement d'une view
+
 class TennisPlayerViewSet(viewsets.ModelViewSet):
     serializer_class = TennisPlayerSerializer
     model=TennisPlayer
 
+    lookup_field = 'id'
+
+    # object à renvoyer en json
     def get_queryset(self):
-        return get_query_perso(self)
+        return get_query_perso(self,order='name')
     
-    #def create(self, request, *args, **kwargs):
-        
-    #    parms = self.request.POST.dict() # pour dico de parametres requis
-
-    #    # données en minuscule
-    #    for key in list(parms.keys()):
-    #        parms[key]=parms[key].lower()
-
-    #    parms_possible =parms.copy() # pour dico de parametres possibles
-
-    #    if len(list(parms.keys())) > 0 : # si il y a des parametres
-    #            for key in list(parms.keys()):
-    #                if key not in [field.name for field in self.model._meta.fields]: # si le parametre n'est pas le nom d'un un field
-    #                    del parms_possible[key]
-    #                if  key not in [field.name for field in self.model._meta.fields if field.null==False]: 
-    #                    del parms[key]
-        
-    #    query = self.model.objects.all().filter(**parms) # si il en existe 1 avec les parametres requis
-    #    if query.count():
-    #        mystatus=status.HTTP_406_NOT_ACCEPTABLE
-    #    else:
-    #        #self.model.create(**parms)
-    #        serializer=self.get_serializer(data=parms_possible) # on creer avec les parametres possibles
-    #        if serializer.is_valid():
-    #            serializer.save()
-    #            mystatus=status.HTTP_201_CREATED
-    #        else:
-    #            mystatus=status.HTTP_406_NOT_ACCEPTABLE
-    #    return Response(parms, status=mystatus, headers=self.get_success_headers(parms))
-    
+    # revois les objects en liste
+    # fonction appellee lors d'un request GET (TennisPlayer/)
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+    # fonction appellee lors d'un request POST (TennisPlayer/)
     def create(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+    # fonction appellee lors d'un request PUT (TennisPlayer/<id>)
     def update(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
+    # fonction appellee lors d'un request DELETE (TennisPlayer/<id>)
     def destroy(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
+    # fonction appellee lors d'un request GET (TennisPlayer/<id>)
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
@@ -86,8 +67,11 @@ class TournamentViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentSerializer
     model=Tournament
 
+    lookup_field = 'id'
+
+
     def get_queryset(self):
-        return get_query_perso(self)
+        return get_query_perso(self,order='-id')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -109,8 +93,11 @@ class TournamentEventViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentEventSerializer
     model=TournamentEvent
 
+    lookup_field = 'id'
+
+
     def get_queryset(self):
-        return get_query_perso(self)
+        return get_query_perso(self,order='-date')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -131,8 +118,11 @@ class TournamentEventViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentEventSerializer
     model=TournamentEvent
 
+    lookup_field = 'id'
+
+
     def get_queryset(self):
-        return get_query_perso(self)
+        return get_query_perso(self,order='-date')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -152,9 +142,12 @@ class TournamentEventViewSet(viewsets.ModelViewSet):
 class MatchViewSet(viewsets.ModelViewSet):
     serializer_class = MatchSerializer
     model=Match
+
+    lookup_field = 'id'
+
     
     def get_queryset(self):
-        return get_query_perso(self)
+        return get_query_perso(self, order='-date')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -176,8 +169,11 @@ class MatchStatsViewSet(viewsets.ModelViewSet):
     serializer_class = MatchStatsSerializer
     model=MatchStats
 
+    lookup_field = 'id'
+
+
     def get_queryset(self):
-        return get_query_perso(self)
+        return get_query_perso(self,order='match')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -198,8 +194,11 @@ class TennisPlayerStatsViewSet(viewsets.ModelViewSet):
     serializer_class = TennisPlayerStatsSerializer
     model=MatchStats
 
+    lookup_field = 'id'
+
+
     def get_queryset(self):
-        return get_query_perso(self)
+        return get_query_perso(self, order='id')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)

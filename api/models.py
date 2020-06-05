@@ -3,6 +3,13 @@ from django.db import models
 # Create your models here.
 
 class TennisPlayer(models.Model):
+
+    NATIONALITY_CHOICES = (
+        ('S', 'Small'),
+        ('M', 'Medium'),
+        ('L', 'Large'),
+        )
+
     name = models.CharField(max_length=15)
     firstname = models.CharField(max_length=15)
     nationality = models.CharField(max_length=15, null=True, blank=True)
@@ -11,6 +18,19 @@ class TennisPlayer(models.Model):
         return self.name + " " + self.firstname
 
 class Tournament(models.Model):
+
+    SURFACE_CHOICES = (
+        ('A', 'Acrylic'),
+        ('B', 'Artificial clay'),
+        ('C', 'Artificial grass'),
+        ('D', 'Asphalt'),
+        ('E', 'Carpet'),
+        ('F', 'Clay'),
+        ('G', 'Concrete'),
+        ('H', 'Grass'),
+        ('J', 'Other'),
+        )
+
     name = models.CharField(max_length=15)
     surface = models.CharField(max_length=15)
     date = models.DateField(null=True, blank=True)

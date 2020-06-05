@@ -15,21 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from . import views
 from . import viewSets
 
 routeur = DefaultRouter()
-routeur.register('TennisPlayer', viewSets.TennisPlayerViewSet, basename='TennisPlayer')
-routeur.register('TennisPlayerStats', viewSets.TennisPlayerStatsViewSet, basename='TennisPlayerStats')
-routeur.register('Match', viewSets.MatchViewSet, basename='Match')
-routeur.register('MatchStats', viewSets.MatchStatsViewSet, basename='MatchStats')
-routeur.register('Tournament', viewSets.TournamentViewSet, basename='Tournament')
-routeur.register('TournamentEvent', viewSets.TournamentEventViewSet, basename='TournamentEvent')
+routeur.register('tennisPlayer', viewSets.TennisPlayerViewSet, basename='tennisPlayer')
+routeur.register('tennisPlayerStats', viewSets.TennisPlayerStatsViewSet, basename='tennisPlayerStats')
+routeur.register('match', viewSets.MatchViewSet, basename='match')
+routeur.register('matchStats', viewSets.MatchStatsViewSet, basename='matchStats')
+routeur.register('tournament', viewSets.TournamentViewSet, basename='tournament')
+routeur.register('tournamentEvent', viewSets.TournamentEventViewSet, basename='tournamentEvent')
 
 urlpatterns = [
-    path('', include(routeur.urls)),
+    path('', include((routeur.urls,'api'), namespace='api')),
 
     #path('tennisPlayers/', views.TennisPlayerList.as_view()),
     #path('tennisPlayers/<str:pk>', views.TennisPlayerDetail.as_view()),
