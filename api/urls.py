@@ -20,7 +20,7 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 from . import views
 from . import viewSets
 
-routeur = DefaultRouter()
+routeur = SimpleRouter()
 routeur.register('tennisPlayer', viewSets.TennisPlayerViewSet, basename='tennisPlayer')
 routeur.register('tennisPlayerStats', viewSets.TennisPlayerStatsViewSet, basename='tennisPlayerStats')
 routeur.register('match', viewSets.MatchViewSet, basename='match')

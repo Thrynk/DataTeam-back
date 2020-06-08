@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.http import Http404
 from django.core import serializers
+from django.db.models import Q
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -10,6 +11,7 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import action
 
 from .models import * 
 from .serializers import * 
@@ -17,14 +19,25 @@ from .serializers import *
 # ----- fonctions ----- #
 
 # renvois les objects en fonctions des parametres de request.GET
-def get_query_perso(self,order):
-    queryset=self.model.objects.all().order_by(order)
+def query_parms(self,query,model_class):
+    others_parms=['orderby, page']
+    fieldsNames=[field.name for field in model_class._meta.fields] # exemple ['name','firstname']
+
+    orderby = self.request.GET.get('orderby')
+    if orderby is None:
+        orderby = 'id'
+
+    queryset=query.order_by(orderby)
     parms = self.request.GET.dict()
+
     if len(list(parms.keys())) > 0 : # si il y a des parametres dans l'url
         for key in list(parms.keys()):
-            if key not in [field.name for field in self.model._meta.fields]: # si le parametre n'est pas le nom d'un un field 
-                del parms[key]
-        queryset=queryset.filter(**parms) # on filtre notre recherche en fonction des parametres 
+        #    if key not in fieldsNames: # si le parametre n'est pas le nom d'un un field 
+        #        del parms[key]
+            try:
+                queryset=queryset.filter(**{key:parms[key]}) # on filtre notre recherche en fonction des parametres 
+            except:
+                queryset=queryset
     return queryset
 
 # Create your views here.
@@ -33,17 +46,27 @@ def get_query_perso(self,order):
 
 class TennisPlayerViewSet(viewsets.ModelViewSet):
     serializer_class = TennisPlayerSerializer
-    model=TennisPlayer
+    model_class=TennisPlayer
+
+    queryset=model_class.objects.all()
 
     lookup_field = 'id'
 
     # object à renvoyer en json
     def get_queryset(self):
-        return get_query_perso(self,order='name')
-    
+        return query_parms(self, self.queryset, self.model_class)
+
     # revois les objects en liste
     # fonction appellee lors d'un request GET (TennisPlayer/)
     def list(self, request, *args, **kwargs):
+        context={"request":self.request}
+        queryset=self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True, context=context)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True, context=context)
+        return Response(serializer.data)
         return super().list(request, *args, **kwargs)
 
     # fonction appellee lors d'un request POST (TennisPlayer/)
@@ -62,16 +85,41 @@ class TennisPlayerViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
+    @action(detail=True, methods=['get'])
+    def match(self, request, id, pk=None):
+        context={"request":self.request}
+
+        serializer_class = MatchSerializer
+        model_class = Match
+
+        queryset = model_class.objects.all().filter(
+            Q(loser=id)|
+            Q(winner=id)
+            )
+        queryset=query_parms(self,queryset, model_class)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = serializer_class(page, many=True, context=context)
+            return self.get_paginated_response(serializer.data)
+        serializer = serializer_class(queryset, many=True, context=context)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def stats(self, request, id, pk=None):
+        return redirect('api:tennisPlayerStats-detail',id=id)
+
 
 class TournamentViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentSerializer
-    model=Tournament
+    model_class=Tournament
+
+    queryset=model_class.objects.all()
 
     lookup_field = 'id'
 
 
     def get_queryset(self):
-        return get_query_perso(self,order='-id')
+        return query_parms(self, self.queryset, self.model_class)
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -91,13 +139,15 @@ class TournamentViewSet(viewsets.ModelViewSet):
 
 class TournamentEventViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentEventSerializer
-    model=TournamentEvent
+    model_class=TournamentEvent
+
+    queryset=model_class.objects.all()
 
     lookup_field = 'id'
 
 
     def get_queryset(self):
-        return get_query_perso(self,order='-date')
+        return query_parms(self, self.queryset, self.model_class)
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -116,13 +166,15 @@ class TournamentEventViewSet(viewsets.ModelViewSet):
 
 class TournamentEventViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentEventSerializer
-    model=TournamentEvent
+    model_class=TournamentEvent
+
+    queryset=model_class.objects.all()
 
     lookup_field = 'id'
 
 
     def get_queryset(self):
-        return get_query_perso(self,order='-date')
+        return query_parms(self, self.queryset, self.model_class)
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -141,15 +193,35 @@ class TournamentEventViewSet(viewsets.ModelViewSet):
 
 class MatchViewSet(viewsets.ModelViewSet):
     serializer_class = MatchSerializer
-    model=Match
+    model_class=Match
 
     lookup_field = 'id'
 
+    queryset=model_class.objects.all()
     
     def get_queryset(self):
-        return get_query_perso(self, order='-date')
+        return query_parms(self, self.queryset, self.model_class)
+
+    #@action(detail=False, methods=['get'])
+    #def year_filter(self, request, pk=None):
+    #    queryset = self.model_class.objects.all().filter(Q(date__gte='2018-06-01'))
+    #    #queryset = self.model_class.objects.all()
+    #    page = self.paginate_queryset(queryset, self.model_class)
+    #    if page is not None:
+    #        serializer = self.get_serializer(page, many=True)
+    #        return self.get_paginated_response(serializer.data)
+    #    serializer = self.get_serializer(queryset, many=True)
+    #    return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
+        context={"request":self.request}
+        queryset=self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True, context=context)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True, context=context)
+        return Response(serializer.data)
         return super().list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
@@ -164,16 +236,22 @@ class MatchViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
+    @action(detail=True, methods=['get'])
+    def stats(self, request, id, pk=None):
+        return redirect('api:matchStats-detail',id=id)
+
 
 class MatchStatsViewSet(viewsets.ModelViewSet):
     serializer_class = MatchStatsSerializer
-    model=MatchStats
+    model_class=MatchStats
+
+    queryset=model_class.objects.all()
 
     lookup_field = 'id'
 
 
     def get_queryset(self):
-        return get_query_perso(self,order='match')
+        return query_parms(self, self.queryset, self.model_class)
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -192,13 +270,15 @@ class MatchStatsViewSet(viewsets.ModelViewSet):
 
 class TennisPlayerStatsViewSet(viewsets.ModelViewSet):
     serializer_class = TennisPlayerStatsSerializer
-    model=MatchStats
+    model_class=MatchStats
 
     lookup_field = 'id'
 
+    queryset=model_class.objects.all()
+
 
     def get_queryset(self):
-        return get_query_perso(self, order='id')
+        return query_parms(self, self.queryset, self.model_class)
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)

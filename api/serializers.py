@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from . import models as my_models
 
+from django.shortcuts import render, redirect
+
+
 
 # un Serializers sert à reprensenter la donnée en un format adapté à une API (Json).
 
@@ -10,6 +13,16 @@ class TennisPlayerSerializer(serializers.ModelSerializer):
 
     url_detail = serializers.HyperlinkedIdentityField(
         view_name='api:tennisPlayer-detail',
+        lookup_field='id'
+        )
+
+    url_match = serializers.HyperlinkedIdentityField(
+        view_name='api:tennisPlayer-match',
+        lookup_field='id'
+        )
+
+    url_stats = serializers.HyperlinkedIdentityField(
+        view_name='api:tennisPlayer-stats',
         lookup_field='id'
         )
 
@@ -25,9 +38,25 @@ class MatchSerializer(serializers.ModelSerializer):
         lookup_field='id'
         )
 
+    url_stats = serializers.HyperlinkedIdentityField(
+        view_name='api:match-stats',
+        lookup_field='id'
+        )
+
+    #winner_name = serializers.CharField(default=my_models.TennisPlayer.objects.get(id=int(repr(my_models.Match.winner))))
+
+    winner_name=serializers.SerializerMethodField()
+    loser_name=serializers.SerializerMethodField()
+
     class Meta:
         model = my_models.Match
         exclude = ['id']
+
+    def get_winner_name(self, obj):
+        return str(obj.winner.name + " " + obj.winner.firstname)
+
+    def get_loser_name(self, obj):
+        return str(obj.loser.name + " " + obj.loser.firstname)
 
 class MatchStatsSerializer(serializers.ModelSerializer):
 
