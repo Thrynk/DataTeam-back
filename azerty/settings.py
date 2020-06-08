@@ -42,7 +42,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'django_filters',
-    #'corsheaders'
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -133,6 +133,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-#CORS_ORIGIN_WHITELIST = ['*']
+CORS_ORIGIN_WHITELIST = ['*']
 
-#CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
