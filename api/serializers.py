@@ -48,6 +48,8 @@ class MatchSerializer(serializers.ModelSerializer):
     winner_name=serializers.SerializerMethodField()
     loser_name=serializers.SerializerMethodField()
 
+    tournament_event_name=serializers.SerializerMethodField()
+
     class Meta:
         model = my_models.Match
         exclude = ['id']
@@ -57,6 +59,9 @@ class MatchSerializer(serializers.ModelSerializer):
 
     def get_loser_name(self, obj):
         return str(obj.loser.name + " " + obj.loser.firstname)
+
+    def get_tournament_event_name(self, obj):
+        return str(obj.tournament_event.tournament.name)
 
 class MatchStatsSerializer(serializers.ModelSerializer):
 
@@ -98,6 +103,22 @@ class TournamentEventSerializer(serializers.ModelSerializer):
         lookup_field='id'
         )
 
+    tournament_name=serializers.SerializerMethodField()
+
     class Meta:
         model = my_models.TournamentEvent
+        exclude = ['id']
+
+    def get_loser_name(self, obj):
+        return str(obj.tournament.name)
+
+class AnecdoteSerializer(serializers.ModelSerializer):
+
+    url_detail = serializers.HyperlinkedIdentityField(
+        view_name='api:AnecdoteStats-detail',
+        lookup_field='id'
+        )
+
+    class Meta:
+        model = my_models.Anecdote
         exclude = ['id']
