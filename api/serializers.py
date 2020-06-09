@@ -112,6 +112,9 @@ class TournamentEventSerializer(serializers.ModelSerializer):
     def get_loser_name(self, obj):
         return str(obj.tournament.name)
 
+    def get_tournament_event_name(self, obj):
+        return str(obj.tournament.name)
+
 class AnecdoteSerializer(serializers.ModelSerializer):
 
     url_detail = serializers.HyperlinkedIdentityField(
