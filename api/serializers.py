@@ -29,7 +29,9 @@ class TennisPlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = my_models.TennisPlayer
         #fields = ['name','firstname','nationality','url_detail']
-        exclude = ['id']
+        #exclude = ['id']
+        fields='__all__'
+
 
 class MatchSerializer(serializers.ModelSerializer):
 
@@ -52,7 +54,9 @@ class MatchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = my_models.Match
-        exclude = ['id']
+        #exclude = ['id']
+        fields='__all__'
+
 
     def get_winner_name(self, obj):
         return str(obj.winner.name + " " + obj.winner.firstname)
@@ -72,7 +76,8 @@ class MatchStatsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = my_models.MatchStats
-        exclude = ['id']
+        ##exclude = ['id']
+        fields='__all__'
 
 class TennisPlayerStatsSerializer(serializers.ModelSerializer):
 
@@ -83,7 +88,8 @@ class TennisPlayerStatsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = my_models.TennisPlayerStats
-        exclude = ['id']
+        #exclude = ['id']
+        fields='__all__'
 
 class TournamentSerializer(serializers.ModelSerializer):
 
@@ -94,7 +100,9 @@ class TournamentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = my_models.Tournament
-        exclude = ['id']
+        #exclude = ['id']
+        fields='__all__'
+
 
 class TournamentEventSerializer(serializers.ModelSerializer):
 
@@ -107,7 +115,9 @@ class TournamentEventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = my_models.TournamentEvent
-        exclude = ['id']
+        #exclude = ['id']
+        fields='__all__'
+
 
     def get_loser_name(self, obj):
         return str(obj.tournament.name)
@@ -124,4 +134,6 @@ class AnecdoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = my_models.Anecdote
-        exclude = ['id']
+        #exclude = ['id']
+        fields='__all__'
+
