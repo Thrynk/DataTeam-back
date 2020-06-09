@@ -27,7 +27,7 @@ routeur.register('match', viewSets.MatchViewSet, basename='match')
 routeur.register('matchStats', viewSets.MatchStatsViewSet, basename='matchStats')
 routeur.register('tournament', viewSets.TournamentViewSet, basename='tournament')
 routeur.register('tournamentEvent', viewSets.TournamentEventViewSet, basename='tournamentEvent')
-routeur.register('anecdote', viewSets.AnecdoteViewSet, basename='tournamentEvent')
+routeur.register('anecdote', viewSets.AnecdoteViewSet, basename='anecdote')
 
 urlpatterns = [
     path('', include((routeur.urls,'api'), namespace='api')),
