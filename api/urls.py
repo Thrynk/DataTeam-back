@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from . import views
+#from . import views
 from . import viewSets
 
 routeur = SimpleRouter()
@@ -31,23 +31,4 @@ routeur.register('anecdote', viewSets.AnecdoteViewSet, basename='anecdote')
 
 urlpatterns = [
     path('', include((routeur.urls,'api'), namespace='api')),
-
-    #path('tennisPlayers/', views.TennisPlayerList.as_view()),
-    #path('tennisPlayers/<str:pk>', views.TennisPlayerDetail.as_view()),
-
-    #path('tennisPlayerStats/', views.TennisPlayerStatsList.as_view()),
-    #path('tennisPlayerStats/<str:pk>', views.TennisPlayerStatsDetail.as_view()),
-
-    #path('tournaments/', views.TournamentList.as_view()),
-    #path('tournaments/<str:pk>', views.TournamentDetail.as_view()),
-
-    #path('tournamentEvents/', views.TournamentEventList.as_view()),
-    #path('tournamentEvents/<str:pk>', views.TournamentEventDetail.as_view()),
-
-    #path('matchs/', views.MatchList.as_view()),
-    #path('matchs/<str:pk>', views.MatchDetail.as_view()),
-
-    #path('matchStats/', views.MatchStatsList.as_view()),
-    #path('matchStats/<str:pk>', views.MatchStatsDetail.as_view()),
-
 ]

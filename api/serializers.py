@@ -128,7 +128,7 @@ class TournamentEventSerializer(serializers.ModelSerializer):
 class AnecdoteSerializer(serializers.ModelSerializer):
 
     url_detail = serializers.HyperlinkedIdentityField(
-        view_name='api:Anecdote-detail',
+        view_name='api:anecdote-detail',
         lookup_field='id'
         )
 
