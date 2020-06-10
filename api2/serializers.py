@@ -56,7 +56,9 @@ class MatchListSerializer(serializers.ModelSerializer):
         )
 
     winner_name=serializers.SerializerMethodField()
+    winner_firstname=serializers.SerializerMethodField()
     loser_name=serializers.SerializerMethodField()
+    loser_firstname=serializers.SerializerMethodField()
     tournament_event_name=serializers.SerializerMethodField()
 
     class Meta:
@@ -65,8 +67,10 @@ class MatchListSerializer(serializers.ModelSerializer):
             'id',
             'winner',
             'winner_name',
+            'winner_firstname',
             'loser',
             'loser_name',
+            'loser_firstname',
             'tournament_event',
             'tournament_event_name',
             'score',
@@ -76,10 +80,16 @@ class MatchListSerializer(serializers.ModelSerializer):
             ]
 
     def get_winner_name(self, obj):
-        return str(obj.winner.name + " " + obj.winner.firstname)
+        return str(obj.winner.name)
+
+    def get_winner_firstname(self, obj):
+        return str(obj.winner.firstname)
 
     def get_loser_name(self, obj):
         return str(obj.loser.name + " " + obj.loser.firstname)
+
+    def get_loser_firstname(self, obj):
+        return str(obj.winner.firstname)
 
     def get_tournament_event_name(self, obj):
         return str(obj.tournament_event.tournament.name)
