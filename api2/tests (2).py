@@ -1,14 +1,65 @@
 from django.test import TestCase
 import math
+import requests
 
 # Create your tests here.
 
-x=30
-page_nombre=10
-y=x/page_nombre
+content = requests.get('http://192.168.43.51/api2/tennisPlayer/?orderby=name&name__iexact=NaDal')
+data  =content.json()
+print(data)
+print(data['results'])
 
-print(math.ceil(y))
+url='http://192.168.43.51/api2/tennisPlayer/{id}'.format(id=str(1))
+content = requests.get(url)
+data = content.json()
+print(data)
+print(data['id'])
 
-L=[1,5,7,8]
+url='http://192.168.43.51/api2/tennisPlayer/{id}/match/'.format(id='4742')#str(obj.winner.id))
+content = requests.get(url)
+data = content.json()
+print(data)
+print(data['results'])
 
-print(L[0:100])
+#x=30
+#page_nombre=10
+#y=x/page_nombre
+
+#print(math.ceil(y))
+
+#L=[1,5,7,8]
+##L.remove(16)
+
+#print(L[0:100])
+
+#parms_possibles=[
+#            'exact',
+#            'iexact',
+#            'contains',
+#            'icontains',
+#            'in',
+#            'gt',
+#            'gte',
+#            'lt',
+#            'lte',
+#            'startswith',
+#            'istartswith',
+#            'endswith',
+#            'iendswith',
+#            'range',
+#            'date',
+#            'year',
+#            'iso_year',
+#            'month',
+#            'day',
+#            'week',
+#            'week_day',
+#            'quarter',
+#            'time',
+#            'hour',
+#            'minute',
+#            'second',
+#            'isnull',
+#            'regex',
+#            'iregex',
+#            ]

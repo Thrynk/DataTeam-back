@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.http import Http404
+from django import http
 from django.core.paginator import Paginator
 from django.core import serializers
 from django.db.models import Q
@@ -57,6 +58,8 @@ class PaginationClass:
         if page_nombre is None:
             page_nombre=page_nombre_default
         else:
+            if page_nombre == 'all':
+                return queryset,1
             try:
                 page_nombre=int(page_nombre)
             except:
@@ -69,6 +72,40 @@ class PaginationClass:
         max=page*page_nombre
         nombre_de_pages=math.ceil(queryset.count()/page_nombre)
         return queryset[min:max],nombre_de_pages
+
+class FiltreClass:
+    def List(self, List,var):
+        L=[('{var}__'+key).format(var=var) for key in List]+['{var}'.format(var=var)]
+        #print(L)
+        return L
+
+    def query_parms(self, request, queryset, model_class):
+        '''
+        parametres: 
+            request,
+            query,
+            model_class,
+
+        retourne le queryset filtrer en fonction des parametres de l'url
+        '''
+        others_parms=['orderby','page','page_nombre']
+
+        fieldsNames=[field.name for field in model_class._meta.fields] # exemple ['name','firstname']
+
+        orderby = request.GET.get('orderby')
+        if orderby is None:
+            orderby = 'id'
+        queryset=queryset.order_by(orderby)
+
+        parms = request.GET.dict()
+        if len(list(parms.keys())) > 0 : # si il y a des parametres dans l'url
+            for key_parms in list(parms.keys()):
+                if key_parms not in others_parms:
+                    try:
+                        queryset=queryset.filter(**{key_parms:parms[key_parms]}) # on filtre notre recherche en fonction des parametres 
+                    except:
+                        raise Http404
+        return queryset
 
 class ApiRootListView(APIView):
     
@@ -86,13 +123,16 @@ class ApiRootListView(APIView):
 
 ####################################################################################
 
-class TennisPlayerListView(APIView, PaginationClass):
+class TennisPlayerListView(APIView, PaginationClass, FiltreClass):
     model_class=TennisPlayer
     serializer_class=TennisPlayerListSerializer
 
     def get(self, request, format=None):
         context={"request":request}
         queryset = self.model_class.objects.all()
+
+        queryset = self.query_parms(request,queryset,self.model_class)
+
         queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
         if queryset_to_show is not None:
             serializer = self.serializer_class(queryset_to_show, many=True,context=context)
@@ -169,6 +209,7 @@ class TournamentListView(APIView, PaginationClass):
     def get(self, request, format=None):
         context={"request":request}
         queryset = self.model_class.objects.all()
+        queryset = self.query_parms(request,queryset,self.model_class)
         queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
         if queryset_to_show is not None:
             serializer = self.serializer_class(queryset_to_show, many=True,context=context)
@@ -208,6 +249,7 @@ class TournamentEventListView(APIView, PaginationClass):
     def get(self, request, format=None):
         context={"request":request}
         queryset = self.model_class.objects.all()
+        queryset = self.query_parms(request,queryset,self.model_class)
         queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
         if queryset_to_show is not None:
             serializer = self.serializer_class(queryset_to_show, many=True,context=context)
@@ -247,6 +289,7 @@ class MatchListView(APIView, PaginationClass):
     def get(self, request, format=None):
         context={"request":request}
         queryset = self.model_class.objects.all()
+        queryset = self.query_parms(request,queryset,self.model_class)
         queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
         if queryset_to_show is not None:
             serializer = self.serializer_class(queryset_to_show, many=True,context=context)
@@ -291,6 +334,7 @@ class MatchStatsListView(APIView, PaginationClass):
     def get(self, request, format=None):
         context={"request":request}
         queryset = self.model_class.objects.all()
+        queryset = self.query_parms(request,queryset,self.model_class)
         queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
         if queryset_to_show is not None:
             serializer = self.serializer_class(queryset_to_show, many=True,context=context)
@@ -331,6 +375,7 @@ class TennisPlayerStatsListView(APIView, PaginationClass):
     def get(self, request, format=None):
         context={"request":request}
         queryset = self.model_class.objects.all()
+        queryset = self.query_parms(request,queryset,self.model_class)
         queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
         if queryset_to_show is not None:
             serializer = self.serializer_class(queryset_to_show, many=True,context=context)
@@ -370,6 +415,7 @@ class AnecdoteListView(APIView, PaginationClass):
     def get(self, request, format=None):
         context={"request":request}
         queryset = self.model_class.objects.all()
+        queryset = self.query_parms(request,queryset,self.model_class)
         queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
         if queryset_to_show is not None:
             serializer = self.serializer_class(queryset_to_show, many=True,context=context)

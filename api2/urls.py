@@ -24,28 +24,28 @@ urlpatterns = [
     path('', views.ApiRootListView.as_view(), name='ApiUrlList'),
 
     path('tennisPlayer/', views.TennisPlayerListView.as_view(), name='tennisPlayer-list'),
-    path('tennisPlayer/<str:id>', views.TennisPlayerDetailView.as_view(), name='tennisPlayer-detail'),
-    path('tennisPlayer/<str:id>/match', views.TennisPlayerMatchView.as_view(), name='tennisPlayer-match'),
-    path('tennisPlayer/<str:id>/stats', views.TennisPlayerStatsView.as_view(), name='tennisPlayer-stats'),
+    path('tennisPlayer/<str:id>/', views.TennisPlayerDetailView.as_view(), name='tennisPlayer-detail'),
+    path('tennisPlayer/<str:id>/match/', views.TennisPlayerMatchView.as_view(), name='tennisPlayer-match'),
+    path('tennisPlayer/<str:id>/stats/', views.TennisPlayerStatsView.as_view(), name='tennisPlayer-stats'),
 
     path('tennisPlayerStats/', views.TennisPlayerStatsListView.as_view(), name='tennisPlayerStats-list'),
-    path('tennisPlayerStats/<str:id>', views.TennisPlayerStatsDetailView.as_view(), name='tennisPlayerStats-detail'),
+    path('tennisPlayerStats/<str:id>/', views.TennisPlayerStatsDetailView.as_view(), name='tennisPlayerStats-detail'),
 
     path('match/', views.MatchListView.as_view(), name='match-list'),
-    path('match/<str:id>', views.MatchDetailView.as_view(), name='match-detail'),
-    path('match/<str:id>/stats', views.MatchStatsView.as_view(), name='match-stats'),
+    path('match/<str:id>/', views.MatchDetailView.as_view(), name='match-detail'),
+    path('match/<str:id>/stats/', views.MatchStatsView.as_view(), name='match-stats'),
 
     path('matchStats/', views.MatchStatsListView.as_view(), name='matchStats-list'),
-    path('matchStats/<str:id>', views.MatchStatsDetailView.as_view(), name='matchStats-detail'),
+    path('matchStats/<str:id>/', views.MatchStatsDetailView.as_view(), name='matchStats-detail'),
 
     path('tournament/', views.TournamentListView.as_view(), name='tournament-list'),
-    path('tournament/<str:id>', views.TournamentDetailView.as_view(), name='tournament-detail'),
+    path('tournament/<str:id>/', views.TournamentDetailView.as_view(), name='tournament-detail'),
 
     path('tournamentEvent/', views.TournamentEventListView.as_view(), name='tournamentEvent-list'),
-    path('tournamentEvent/<str:id>', views.TournamentEventDetailView.as_view(), name='tournamentEvent-detail'),
+    path('tournamentEvent/<str:id>/', views.TournamentEventDetailView.as_view(), name='tournamentEvent-detail'),
 
     path('anecdote/', views.AnecdoteListView.as_view(), name='anecdote-list'),
-    path('anecdote/<str:id>', views.AnecdoteDetailView.as_view(), name='anecdote-detail'),
+    path('anecdote/<str:id>/', views.AnecdoteDetailView.as_view(), name='anecdote-detail'),
 
 
 ]

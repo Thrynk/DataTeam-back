@@ -10,7 +10,6 @@ djangorestframework==3.11.0
 filelock==3.0.12
 idna==2.9
 numpy==1.18.3
-opencv-python==4.2.0.34
 pytz==2019.3
 requests==2.23.0
 six==1.15.0

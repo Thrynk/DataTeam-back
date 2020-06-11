@@ -3,6 +3,8 @@ from api import models as my_models
 
 from django.shortcuts import render, redirect
 
+import requests
+
 # un Serializers sert à reprensenter la donnée en un format adapté à une API (Json).
 
 class TennisPlayerListSerializer(serializers.ModelSerializer):
@@ -76,7 +78,7 @@ class MatchListSerializer(serializers.ModelSerializer):
             'score',
             'date',
             'round',
-            'url_detail'
+            'url_detail',
             ]
 
     def get_winner_name(self, obj):
@@ -105,6 +107,9 @@ class MatchDetailSerializer(serializers.ModelSerializer):
     loser_name=serializers.SerializerMethodField()
     tournament_event_name=serializers.SerializerMethodField()
 
+    all_match_winner = serializers.SerializerMethodField()
+    all_match_loser = serializers.SerializerMethodField()
+
     class Meta:
         model = my_models.Match
         fields=[
@@ -118,7 +123,9 @@ class MatchDetailSerializer(serializers.ModelSerializer):
             'score',
             'date',
             'round',
-            'url_stats'
+            'url_stats',
+            'all_match_winner',
+            'all_match_loser'
             ]
 
     def get_winner_name(self, obj):
@@ -129,6 +136,18 @@ class MatchDetailSerializer(serializers.ModelSerializer):
 
     def get_tournament_event_name(self, obj):
         return str(obj.tournament_event.tournament.name)
+
+    def get_all_match_winner(self, obj):
+        url='http://192.168.43.51/api2/tennisPlayer/{id}/match/?page_nombre=all'.format(id=str(obj.winner.id))
+        content = requests.get(url)
+        data = content.json()
+        return data["results"]
+
+    def get_all_match_loser(self, obj):
+        url='http://192.168.43.51/api2/tennisPlayer/{id}/match/?page_nombre=all'.format(id=str(obj.loser.id))
+        content = requests.get(url)
+        data = content.json()
+        return data["results"]
 
 ####################################################################################
 
