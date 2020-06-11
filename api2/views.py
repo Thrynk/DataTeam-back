@@ -163,7 +163,7 @@ class TennisPlayerDetailView(APIView):
         serializer = self.serializer_class(queryset,context=context)
         return Response(serializer.data)
 
-class TennisPlayerMatchView(APIView, PaginationClass):
+class TennisPlayerMatchView(APIView, PaginationClass, FiltreClass):
     model_class=TennisPlayer
     serializer_class=MatchListSerializer
 
@@ -181,9 +181,10 @@ class TennisPlayerMatchView(APIView, PaginationClass):
             Q(loser=id)|
             Q(winner=id)
             )
+        queryset = self.query_parms(request,queryset,model_class)
         queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
         if queryset_to_show is not None:
-            serializer = self.serializer_class(queryset_to_show, many=True,context=context)
+            serializer = serializer_class(queryset_to_show, many=True,context=context)
             data={
                 "count":queryset.count(),
                 "number of pages":nombre_de_pages,
@@ -202,7 +203,7 @@ class TennisPlayerStatsView(APIView):
 
 ####################################################################################
 
-class TournamentListView(APIView, PaginationClass):
+class TournamentListView(APIView, PaginationClass, FiltreClass):
     model_class=Tournament
     serializer_class=TournamentListSerializer
 
@@ -242,7 +243,7 @@ class TournamentDetailView(APIView):
 
 ####################################################################################
 
-class TournamentEventListView(APIView, PaginationClass):
+class TournamentEventListView(APIView, PaginationClass, FiltreClass):
     model_class=TournamentEvent
     serializer_class=TournamentEventListSerializer
 
@@ -282,7 +283,7 @@ class TournamentEventDetailView(APIView):
 
 ####################################################################################
 
-class MatchListView(APIView, PaginationClass):
+class MatchListView(APIView, PaginationClass, FiltreClass):
     model_class=Match
     serializer_class=MatchListSerializer
 
@@ -327,7 +328,7 @@ class MatchStatsView(APIView):
 
 ###################################################################################
 
-class MatchStatsListView(APIView, PaginationClass):
+class MatchStatsListView(APIView, PaginationClass, FiltreClass):
     model_class=MatchStats
     serializer_class=MatchStatsListSerializer
 
@@ -368,7 +369,7 @@ class MatchStatsDetailView(APIView):
 
 ###################################################################################
 
-class TennisPlayerStatsListView(APIView, PaginationClass):
+class TennisPlayerStatsListView(APIView, PaginationClass, FiltreClass):
     model_class=TennisPlayerStats
     serializer_class=TennisPlayerStatsListSerializer
 
@@ -408,7 +409,7 @@ class TennisPlayerStatsDetailView(APIView):
 
 ###################################################################################
 
-class AnecdoteListView(APIView, PaginationClass):
+class AnecdoteListView(APIView, PaginationClass, FiltreClass):
     model_class=Anecdote
     serializer_class=AnecdoteListSerializer
 
