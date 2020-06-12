@@ -47,5 +47,8 @@ urlpatterns = [
     path('anecdote/', views.AnecdoteListView.as_view(), name='anecdote-list'),
     path('anecdote/<str:id>/', views.AnecdoteDetailView.as_view(), name='anecdote-detail'),
 
+    path('meteo/', views.MeteoListView.as_view(), name='meteo-list'),
+    path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'),
+
 
 ]

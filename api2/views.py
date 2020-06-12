@@ -118,6 +118,7 @@ class ApiRootListView(APIView):
             'tournament-url': reverse('api2:tournament-list', request=request),
             'tournamentEvent-url': reverse('api2:tournamentEvent-list', request=request),
             'anecdote-url': reverse('api2:anecdote-list', request=request),
+            'meteo-url': reverse('api2:meteo-list', request=request),
         }
         return Response(data)
 
@@ -448,3 +449,41 @@ class AnecdoteDetailView(APIView):
         return Response(serializer.data)
 
 ###################################################################################
+
+class MeteoListView(APIView, PaginationClass, FiltreClass):
+    model_class=Meteo
+    serializer_class=MeteoListSerializer
+
+    def get(self, request, format=None):
+        context={"request":request}
+        queryset = self.model_class.objects.all()
+        queryset = self.query_parms(request,queryset,self.model_class)
+        queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
+        if queryset_to_show is not None:
+            serializer = self.serializer_class(queryset_to_show, many=True,context=context)
+            data={
+                "count":queryset.count(),
+                "number of pages":nombre_de_pages,
+                "results":serializer.data
+                }
+        else:
+            data={
+                "error in parameters":"page_nombre and page must be int()",
+                }
+        return Response(data)
+
+class MeteoDetailView(APIView):
+    model_class=Meteo
+    serializer_class=MeteoDetailSerializer
+
+    def get_object(self, id):
+        try:
+            return self.model_class.objects.get(id=id)
+        except self.model_class.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id, format=None):
+        context={"request":request}
+        queryset = self.get_object(id)
+        serializer = self.serializer_class(queryset,context=context)
+        return Response(serializer.data)
