@@ -67,7 +67,6 @@ for i in range(0, len(data["data"][0]["coordinates"][0]["dates"])):
                     data["data"][0]["coordinates"][0]["dates"][i]["date"] \
             ) \
     )
-recordsList
     
 BASE_DIR = os.path.abspath('../')
 db_file = os.path.join(BASE_DIR, 'db.sqlite3')
