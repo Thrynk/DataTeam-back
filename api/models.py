@@ -105,4 +105,11 @@ class Anecdote(models.Model):
     def __str__(self):
         return self.title
 
+class Meteo(models.Model):
+    location_latitude = models.DecimalField(max_digits=15, decimal_places=8)
+    location_longitude = models.DecimalField(max_digits=15, decimal_places=8)
+    temperature = models.DecimalField(max_digits=5, decimal_places=2)
+    humidity = models.DecimalField(max_digits=5, decimal_places=2)
+    precipitation = models.DecimalField(max_digits=5, decimal_places=2)
+    date = models.DateTimeField()
 
