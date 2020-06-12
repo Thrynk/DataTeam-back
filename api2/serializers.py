@@ -7,8 +7,6 @@ import requests
 
 # un Serializers sert à reprensenter la donnée en un format adapté à une API (Json).
 
-dateToday = '2019-05-27' # date de audhui que l'on simule de 27/05/2019
-
 class TennisPlayerListSerializer(serializers.ModelSerializer):
 #class TennisPlayerSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -151,14 +149,14 @@ class MatchDetailSerializer(serializers.ModelSerializer):
 
     def get_all_match_winner(self, obj):
         request = self.context['request']
-        url=request.build_absolute_uri('/api2/tennisPlayer/{id}/match/?page_nombre=100&orderby=-date&date__lte={dateToday}'.format(id=str(obj.winner.id),dateToday=dateToday))
+        url=request.build_absolute_uri('/api2/tennisPlayer/{id}/match/?page_nombre=100&orderby=-date&date__lte={date}'.format(id=str(obj.winner.id),date=str(obj.date)))
         content = requests.get(url)
         data = content.json()
         return data["results"]
 
     def get_all_match_loser(self, obj):
         request = self.context['request']
-        url=request.build_absolute_uri('/api2/tennisPlayer/{id}/match/?page_nombre=100&orderby=-date&date__lte={dateToday}'.format(id=str(obj.loser.id),dateToday=dateToday))
+        url=request.build_absolute_uri('/api2/tennisPlayer/{id}/match/?page_nombre=100&orderby=-date&date__lte={date}'.format(id=str(obj.loser.id),date=str(obj.date)))
         content = requests.get(url)
         data = content.json()
         return data["results"]
