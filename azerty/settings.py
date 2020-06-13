@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'api.apps.ApiConfig',
     'api2.apps.Api2Config',
+    
 
     'rest_framework',
     'django_filters',

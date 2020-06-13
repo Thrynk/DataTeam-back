@@ -113,3 +113,7 @@ class Meteo(models.Model):
     precipitation = models.DecimalField(max_digits=5, decimal_places=2)
     date = models.DateTimeField()
 
+class Flag(models.Model):
+    country_id = models.CharField(max_length=25)
+    flag_png = models.CharField(max_length=25)
+

@@ -487,3 +487,10 @@ class MeteoDetailView(APIView):
         queryset = self.get_object(id)
         serializer = self.serializer_class(queryset,context=context)
         return Response(serializer.data)
+
+###################################################################################
+
+class LocalisationView(APIView):
+
+    def post(self, request):
+        a=0
