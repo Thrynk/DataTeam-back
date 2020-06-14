@@ -1,11 +1,49 @@
 from rest_framework import serializers
-from api import models as my_models
+from rest_framework.reverse import reverse
 
 from django.shortcuts import render, redirect
+
+from api import models as my_models
 
 import requests
 
 # un Serializers sert à reprensenter la donnée en un format adapté à une API (Json).
+
+####################################################################################
+
+class HyperlinkedIdentityFieldWithLookup_fields(serializers.HyperlinkedIdentityField):
+    """
+    Represents the instance, or a property on the instance, using hyperlinking.
+
+    lookup_fields is a tuple of tuples of the form:
+        ('model_field', 'url_parameter')
+    """
+    lookup_fields = [
+        ('pk','pk'),
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.lookup_fields = kwargs.pop('lookup_fields', self.lookup_fields)
+        super(HyperlinkedIdentityFieldWithLookup_fields, self).__init__(*args, **kwargs)
+
+    def get_url(self, obj, view_name, request, format):
+        """
+        Given an object, return the URL that hyperlinks to the object.
+
+        May raise a `NoReverseMatch` if the `view_name` and `lookup_field`
+        attributes are not configured to correctly match the URL conf.
+        """
+        kwargs = {}
+        for url_param, fieldName in self.lookup_fields:
+            attr = getattr(obj,fieldName, None)
+            if attr is None:
+                attr=fieldName
+            kwargs[url_param] = attr
+
+        return reverse(view_name, kwargs=kwargs, request=request, format=format)
+
+####################################################################################
+
 
 class TennisPlayerListSerializer(serializers.ModelSerializer):
 #class TennisPlayerSerializer(serializers.HyperlinkedModelSerializer):
@@ -37,6 +75,14 @@ class TennisPlayerDetailSerializer(serializers.ModelSerializer):
         lookup_field='id'
         )
 
+    url_flag = HyperlinkedIdentityFieldWithLookup_fields(
+        view_name='api2:flag-detail',
+        lookup_fields=[('Country_code','nationality'),
+                       ('taille','16')]
+        )
+
+    url_flag=serializers.SerializerMethodField()
+
     class Meta:
         model = my_models.TennisPlayer
         fields = [
@@ -46,7 +92,15 @@ class TennisPlayerDetailSerializer(serializers.ModelSerializer):
             'nationality',
             'url_match',
             'url_stats',
+            'url_flag',
             ]
+
+    def get_url_flag(self, obj):
+        kwargs={}
+        kwargs['taille']='16'
+        kwargs['Country_code']=obj.nationality
+        return reverse('api2:flag-detail', kwargs=kwargs, request=request)
+
 
 ####################################################################################
 

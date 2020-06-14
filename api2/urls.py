@@ -50,5 +50,8 @@ urlpatterns = [
     path('meteo/', views.MeteoListView.as_view(), name='meteo-list'),
     path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'),
 
+    path('flag/<str:taille>/<str:Country_code>', views.FlagDetailView.as_view(), name='flag-detail'),
+
+
 
 ]

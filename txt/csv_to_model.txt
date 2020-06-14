@@ -1,0 +1,3 @@
+from csvModule.csvFunctions import csv_to_model
+from api.models import *
+csv_to_model('nationalities.csv',Flag)

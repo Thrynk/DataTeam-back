@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.http import Http404
+from django.http import JsonResponse, Http404, FileResponse
+#from django.http import Http404
 from django import http
 from django.core.paginator import Paginator
 from django.core import serializers
@@ -494,3 +494,11 @@ class LocalisationView(APIView):
 
     def post(self, request):
         a=0
+
+###################################################################################
+
+class FlagDetailView(APIView):
+
+    def get(self, request, taille, Country_code, format=None):
+        img = open('static/Flag/{taille}/{Country_code}'.format(taille=taille,Country_code=Country_code), 'rb')
+        return FileResponse(img)
