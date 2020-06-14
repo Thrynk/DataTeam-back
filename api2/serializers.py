@@ -14,21 +14,24 @@ import requests
 class HyperlinkedIdentityFieldWithLookup_fields(serializers.HyperlinkedIdentityField):
 
     lookup_fields = [
-        ('pk','obj.pk'),
         ]
+
+    def getattrList(self,List):
+        for i in range (0,len(List)-1):
+            a=getattr(List[i],List[i+1])
+            print(a)
+        return a
 
     def __init__(self, *args, **kwargs):
         self.lookup_fields = kwargs.pop('lookup_fields', self.lookup_fields)
-        super(HyperlinkedIdentityFieldWithLookup_fields, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_url(self, obj, view_name, request, format):
         kwargs = {}
-        for url_param, value in self.lookup_fields:
-            value = value.split('.')
-            if value[0] == "obj":
-                attr = getattr(obj,value[1], None)
-            if value[0] == "request":
-                attr = getattr(request,value[1], 16)
+        for url_param, model_field in self.lookup_fields:
+            attr = obj
+            for field in model_field.split('.'):
+                attr = getattr(attr,field)
             kwargs[url_param] = attr
 
         return reverse(view_name, kwargs=kwargs, request=request, format=format)
@@ -88,13 +91,6 @@ class TennisPlayerDetailSerializer(serializers.ModelSerializer):
             'url_flag',
             ]
 
-    #def get_url_flag(self, obj):
-    #    kwargs={}
-    #    kwargs['taille']='16'
-    #    kwargs['Country_code']=obj.nationality
-    #    return reverse('api2:flag-detail', kwargs=kwargs, request=request)
-
-
 ####################################################################################
 
 class MatchListSerializer(serializers.ModelSerializer):
@@ -110,6 +106,18 @@ class MatchListSerializer(serializers.ModelSerializer):
     loser_firstname=serializers.SerializerMethodField()
     tournament_event_name=serializers.SerializerMethodField()
 
+    url_winner_flag = HyperlinkedIdentityFieldWithLookup_fields(
+        view_name='api2:tennisPlayer-flag',
+        lookup_fields=[('id', 'winner.id'),
+                       ],
+        )
+
+    url_loser_flag = HyperlinkedIdentityFieldWithLookup_fields(
+        view_name='api2:tennisPlayer-flag',
+        lookup_fields=[('id', 'loser.id'),
+                        ],
+        )
+
     class Meta:
         model = my_models.Match
         fields=[
@@ -117,9 +125,11 @@ class MatchListSerializer(serializers.ModelSerializer):
             'winner',
             'winner_name',
             'winner_firstname',
+            'url_winner_flag',
             'loser',
             'loser_name',
             'loser_firstname',
+            'url_loser_flag',
             'tournament_event',
             'tournament_event_name',
             'score',
@@ -159,6 +169,18 @@ class MatchDetailSerializer(serializers.ModelSerializer):
     all_match_winner = serializers.SerializerMethodField()
     all_match_loser = serializers.SerializerMethodField()
 
+    url_winner_flag = HyperlinkedIdentityFieldWithLookup_fields(
+        view_name='api2:tennisPlayer-flag',
+        lookup_fields=[('id', 'winner.id'),
+                       ],
+        )
+
+    url_loser_flag = HyperlinkedIdentityFieldWithLookup_fields(
+        view_name='api2:tennisPlayer-flag',
+        lookup_fields=[('id', 'loser.id'),
+                        ],
+        )
+
     class Meta:
         model = my_models.Match
         fields=[
@@ -166,9 +188,11 @@ class MatchDetailSerializer(serializers.ModelSerializer):
             'winner',
             'winner_name',
             'winner_firstname',
+            'url_winner_flag',
             'loser',
             'loser_name',
             'loser_firstname',
+            'url_loser_flag',
             'tournament_event',
             'tournament_event_name',
             'score',

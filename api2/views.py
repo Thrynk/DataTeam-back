@@ -233,7 +233,7 @@ class TennisPlayerFlagView(APIView, PaginationClass, FiltreClass):
         queryset = self.get_object(id)
         nationality = queryset.nationality
         FlagName=Flag.objects.get(country_id=nationality).flag_png
-        taille=self.image_taille(request,'16')
+        taille=self.image_taille(request,'24')
         img = open('static/Flag/{taille}/{flag_png}'.format(taille=taille,flag_png=FlagName), 'rb')
         return FileResponse(img)
 
@@ -531,9 +531,3 @@ class LocalisationView(APIView):
         a=0
 
 ###################################################################################
-
-class FlagDetailView(APIView):
-
-    def get(self, request, taille, Country_code, format=None):
-        img = open('static/Flag/{taille}/{Country_code}'.format(taille=taille,Country_code=Country_code), 'rb')
-        return FileResponse(img)
