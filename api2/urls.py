@@ -25,6 +25,7 @@ urlpatterns = [
 
     path('tennisPlayer/', views.TennisPlayerListView.as_view(), name='tennisPlayer-list'),
     path('tennisPlayer/<str:id>/', views.TennisPlayerDetailView.as_view(), name='tennisPlayer-detail'),
+    path('tennisPlayer/<str:id>/flag/', views.TennisPlayerFlagView.as_view(), name='tennisPlayer-flag'),
     path('tennisPlayer/<str:id>/match/', views.TennisPlayerMatchView.as_view(), name='tennisPlayer-match'),
     path('tennisPlayer/<str:id>/stats/', views.TennisPlayerStatsView.as_view(), name='tennisPlayer-stats'),
 
@@ -50,7 +51,7 @@ urlpatterns = [
     path('meteo/', views.MeteoListView.as_view(), name='meteo-list'),
     path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'),
 
-    path('flag/<str:taille>/<str:Country_code>', views.FlagDetailView.as_view(), name='flag-detail'),
+    #path('flag/<str:taille>/<str:Country_code>', views.FlagDetailView.as_view(), name='flag-detail'),
 
 
 

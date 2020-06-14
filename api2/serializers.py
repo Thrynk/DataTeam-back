@@ -12,14 +12,9 @@ import requests
 ####################################################################################
 
 class HyperlinkedIdentityFieldWithLookup_fields(serializers.HyperlinkedIdentityField):
-    """
-    Represents the instance, or a property on the instance, using hyperlinking.
 
-    lookup_fields is a tuple of tuples of the form:
-        ('model_field', 'url_parameter')
-    """
     lookup_fields = [
-        ('pk','pk'),
+        ('pk','obj.pk'),
         ]
 
     def __init__(self, *args, **kwargs):
@@ -27,17 +22,13 @@ class HyperlinkedIdentityFieldWithLookup_fields(serializers.HyperlinkedIdentityF
         super(HyperlinkedIdentityFieldWithLookup_fields, self).__init__(*args, **kwargs)
 
     def get_url(self, obj, view_name, request, format):
-        """
-        Given an object, return the URL that hyperlinks to the object.
-
-        May raise a `NoReverseMatch` if the `view_name` and `lookup_field`
-        attributes are not configured to correctly match the URL conf.
-        """
         kwargs = {}
-        for url_param, fieldName in self.lookup_fields:
-            attr = getattr(obj,fieldName, None)
-            if attr is None:
-                attr=fieldName
+        for url_param, value in self.lookup_fields:
+            value = value.split('.')
+            if value[0] == "obj":
+                attr = getattr(obj,value[1], None)
+            if value[0] == "request":
+                attr = getattr(request,value[1], 16)
             kwargs[url_param] = attr
 
         return reverse(view_name, kwargs=kwargs, request=request, format=format)
@@ -75,13 +66,15 @@ class TennisPlayerDetailSerializer(serializers.ModelSerializer):
         lookup_field='id'
         )
 
-    url_flag = HyperlinkedIdentityFieldWithLookup_fields(
-        view_name='api2:flag-detail',
-        lookup_fields=[('Country_code','nationality'),
-                       ('taille','16')]
+    #url_flag = HyperlinkedIdentityFieldWithLookup_fields(
+    url_flag = serializers.HyperlinkedIdentityField(
+        view_name='api2:tennisPlayer-flag',
+        lookup_field='id',
+        #lookup_fields=[('Country_code','obj.nationality'),
+        #               ('taille','request.parser_context["kwargs"]["taille"]')]
         )
 
-    url_flag=serializers.SerializerMethodField()
+    #url_flag=serializers.SerializerMethodField()
 
     class Meta:
         model = my_models.TennisPlayer
@@ -95,11 +88,11 @@ class TennisPlayerDetailSerializer(serializers.ModelSerializer):
             'url_flag',
             ]
 
-    def get_url_flag(self, obj):
-        kwargs={}
-        kwargs['taille']='16'
-        kwargs['Country_code']=obj.nationality
-        return reverse('api2:flag-detail', kwargs=kwargs, request=request)
+    #def get_url_flag(self, obj):
+    #    kwargs={}
+    #    kwargs['taille']='16'
+    #    kwargs['Country_code']=obj.nationality
+    #    return reverse('api2:flag-detail', kwargs=kwargs, request=request)
 
 
 ####################################################################################

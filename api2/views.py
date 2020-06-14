@@ -107,6 +107,23 @@ class FiltreClass:
                         raise Http404
         return queryset
 
+    def image_taille(self,request,default):
+        '''
+        parametres: 
+            request,
+            default,
+
+        retourne la taille de l'image
+        '''
+        tailles_possibles=['16','24','32','48','64']
+        taille = request.GET.get('taille')
+        if taille is None:
+            taille = default
+        if taille not in tailles_possibles:
+            raise Http404
+        else:
+            return taille
+
 class ApiRootListView(APIView):
     
     def get(self, request, format=None):
@@ -201,6 +218,24 @@ class TennisPlayerStatsView(APIView):
 
     def get(self, request, id, format=None):
         return redirect('api2:tennisPlayerStats-detail',id=id)
+
+class TennisPlayerFlagView(APIView, PaginationClass, FiltreClass):
+    model_class=TennisPlayer
+
+    def get_object(self, id):
+        try:
+            return self.model_class.objects.get(id=id)
+        except TennisPlayer.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id, format=None):
+        context={"request":self.request}
+        queryset = self.get_object(id)
+        nationality = queryset.nationality
+        FlagName=Flag.objects.get(country_id=nationality).flag_png
+        taille=self.image_taille(request,'16')
+        img = open('static/Flag/{taille}/{flag_png}'.format(taille=taille,flag_png=FlagName), 'rb')
+        return FileResponse(img)
 
 ####################################################################################
 
