@@ -426,6 +426,7 @@ class AnecdoteListSerializer(serializers.ModelSerializer):
     class Meta:
         model = my_models.Anecdote
         fields=[
+            'id',
             'title',
             'url_detail'
             ]
@@ -445,10 +446,10 @@ class AnecdoteDetailSerializer(serializers.ModelSerializer):
 class MeteoListSerializer(serializers.ModelSerializer):
 #class TennisPlayerSerializer(serializers.HyperlinkedModelSerializer):
 
-    url_detail = serializers.HyperlinkedIdentityField(
-        view_name='api2:meteo-detail',
-        lookup_field='id'
-        )
+    #url_detail = serializers.HyperlinkedIdentityField(
+    #    view_name='api2:meteo-detail',
+    #    lookup_field='id'
+    #    )
 
     class Meta:
         model = my_models.Meteo
@@ -460,7 +461,7 @@ class MeteoListSerializer(serializers.ModelSerializer):
             'humidity',
             'precipitation',
             'date',
-            'url_detail',
+            #'url_detail',
             ]
 
 class MeteoDetailSerializer(serializers.ModelSerializer):

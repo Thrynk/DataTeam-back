@@ -17,6 +17,8 @@ from rest_framework import status
 from api.models import * 
 from .serializers import * 
 
+from datacollection.meteo2 import recup_meteo
+
 import math
 
 # Create your views here.
@@ -483,6 +485,13 @@ class AnecdoteDetailView(APIView):
         serializer = self.serializer_class(queryset,context=context)
         return Response(serializer.data)
 
+    def put(self, request, id, format=None):
+        instance = self.get_object(id)
+        serializer = self.serializer_class(instance, data=request.POST)#, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
 ###################################################################################
 
 class MeteoListView(APIView, PaginationClass, FiltreClass):
@@ -522,6 +531,18 @@ class MeteoDetailView(APIView):
         queryset = self.get_object(id)
         serializer = self.serializer_class(queryset,context=context)
         return Response(serializer.data)
+
+class MeteoUpdateView(APIView):
+    model_class=Meteo
+    serializer_class=MeteoDetailSerializer
+
+    def get(self, request, format=None):
+        try:
+            recup_meteo(50.6,3.06)
+            success=1
+        except:
+            success=0
+        return Response({"sucess":success})
 
 ###################################################################################
 

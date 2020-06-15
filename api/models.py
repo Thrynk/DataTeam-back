@@ -99,8 +99,8 @@ class TennisPlayerStats(models.Model):
         return self.player.name
 
 class Anecdote(models.Model):
-    title = models.CharField(max_length=15)
-    content = models.CharField(max_length=150)
+    title = models.CharField(max_length=50)
+    content = models.CharField(max_length=500)
 
     def __str__(self):
         return self.title
@@ -111,7 +111,7 @@ class Meteo(models.Model):
     temperature = models.DecimalField(max_digits=5, decimal_places=2)
     humidity = models.DecimalField(max_digits=5, decimal_places=2)
     precipitation = models.DecimalField(max_digits=5, decimal_places=2)
-    date = models.DateTimeField()
+    date = models.CharField(max_length=50)
 
 class Flag(models.Model):
     country_id = models.CharField(max_length=25)

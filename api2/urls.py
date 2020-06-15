@@ -49,7 +49,8 @@ urlpatterns = [
     path('anecdote/<str:id>/', views.AnecdoteDetailView.as_view(), name='anecdote-detail'),
 
     path('meteo/', views.MeteoListView.as_view(), name='meteo-list'),
-    path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'),
+    #path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'),
+    path('meteo/update/', views.MeteoUpdateView.as_view(), name='meteo-update'),
 
     #path('flag/<str:taille>/<str:Country_code>', views.FlagDetailView.as_view(), name='flag-detail'),
 
