@@ -709,8 +709,8 @@ class MeteoUpdateView(APIView):
 )
 
         data=request.POST.dict()
-        longitude=data['longitude']
-        latitude=data['latitude']
+        longitude=data["longitude"]
+        latitude=data["latitude"]
 
         cities = City.objects.all().order_by('location_longitude', 'location_latitude')
 
