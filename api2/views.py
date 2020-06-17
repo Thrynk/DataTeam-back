@@ -137,7 +137,8 @@ class ApiRootListView(APIView):
             'tournament-url': reverse('api2:tournament-list', request=request),
             'tournamentEvent-url': reverse('api2:tournamentEvent-list', request=request),
             'anecdote-url': reverse('api2:anecdote-list', request=request),
-            'meteo-url': reverse('api2:meteo-list', request=request),
+           # 'meteo-url': reverse('api2:meteo-list', request=request),
+            'city-url': reverse('api2:city-list', request=request),
         }
         return Response(data)
 
@@ -494,9 +495,9 @@ class AnecdoteDetailView(APIView):
 
 ###################################################################################
 
-class MeteoListView(APIView, PaginationClass, FiltreClass):
-    model_class=Meteo
-    serializer_class=MeteoListSerializer
+class CityListView(APIView, PaginationClass, FiltreClass):
+    model_class=City
+    serializer_class=CityListSerializer
 
     def get(self, request, format=None):
         context={"request":request}
@@ -514,11 +515,13 @@ class MeteoListView(APIView, PaginationClass, FiltreClass):
             data={
                 "error in parameters":"page_nombre and page must be int()",
                 }
+        print(queryset_to_show)
+        print(serializer.data)
         return Response(data)
 
-class MeteoDetailView(APIView):
-    model_class=Meteo
-    serializer_class=MeteoDetailSerializer
+class CityDetailView(APIView, PaginationClass, FiltreClass):
+    model_class=City
+    serializer_class=CityListSerializer
 
     def get_object(self, id):
         try:
@@ -528,27 +531,224 @@ class MeteoDetailView(APIView):
 
     def get(self, request, id, format=None):
         context={"request":request}
-        queryset = self.get_object(id)
-        serializer = self.serializer_class(queryset,context=context)
-        return Response(serializer.data)
+        queryset = Meteo.objects.all().filter(city=self.get_object(id))
+        queryset = self.query_parms(request,queryset,Meteo)
+        queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
+        if queryset_to_show is not None:
+            serializer = MeteoListSerializer(queryset_to_show, many=True,context=context)
+            data={
+                "count":queryset.count(),
+                "number of pages":nombre_de_pages,
+                "results":serializer.data
+                }
+        else:
+            data={
+                "error in parameters":"page_nombre and page must be int()",
+                }
+        return Response(data)
+
+
+class CityMoyenneListView(APIView, PaginationClass, FiltreClass):
+    model_class=City
+    serializer_class=CityListSerializer
+
+    def get_object(self, id):
+        try:
+            return self.model_class.objects.get(id=id)
+        except self.model_class.DoesNotExist:
+            raise Http404
+
+    #def regroupe_queryset(self,queryset,prm,nb=None):
+    #    queryset_copie=queryset.all()
+
+    #    hasattr(queryset_copie.first(),prm)
+
+    #    L=[]
+
+    #    while queryset_copie.count():
+    #        if nb is not None:
+    #            try:
+    #                ref=getattr(queryset.exclude(**filtre).first(),prm)[0:nb]
+    #            except:
+    #                ref=getattr(queryset.first(),prm)[0:nb]
+    #            filtre={"{}__icontains".format(prm):ref}
+    #        else:
+    #            try:
+    #                ref=getattr(queryset.exclude(**filtre).first(),prm)
+    #            except:
+    #                ref=getattr(queryset.first(),prm)
+    #            filtre={"{}".format(prm):ref}
+    #        q = queryset.filter(**filtre)
+    #        L.append(q)
+    #        #q.delete()
+    #    return L
+
+    def regroupe_queryset(self,queryset,prm,nb=None):
+        queryset_copie=queryset.all()
+
+        hasattr(queryset_copie.first(),prm)
+
+        L=[]
+
+        while queryset_copie.count():
+            if nb is not None:
+                ref=getattr(queryset_copie.first(),prm)[0:nb]
+                filtre={"{}__icontains".format(prm):ref}
+            else:
+                ref=getattr(queryset_copie.first(),prm)
+                filtre={"{}".format(prm):ref}
+            q = queryset_copie.filter(**filtre)
+            L.append(q)
+            queryset_copie = queryset_copie.exclude(**filtre)
+        return L
+
+    def get(self, request, id, format=None):
+        context={"request":request}
+        queryset = Meteo.objects.all().filter(city=self.get_object(id))
+        queryset = self.query_parms(request,queryset,Meteo)
+
+        print(queryset)
+        date_time=queryset.first().date_time[0:10]
+        location_latitude=1
+        location_longitude=1
+        temperature_moyenne=1
+        humidity_moyenne=1
+        temperature_moyenne=1
+        precipitation_mpyenne=1
+
+        List=self.regroupe_queryset(queryset,"date_time",10)
+        L=[]
+
+        for query in List:
+            data={
+                "heures":query.count(),
+                "date_time": query.first().date_time,
+                "location_latitude": query.first().location_latitude,
+                "location_longitude": query.first().location_longitude,
+                "temperature": 0,
+                "humidity": 0,
+                "precipitation": 0,
+                }
+            for q in query:
+                data["temperature"]+=q.temperature
+                data["humidity"]+=q.humidity
+                data["precipitation"]+=q.precipitation
+            data["temperature"]=data["temperature"]/data["heures"]
+            data["humidity"]=data["humidity"]/data["heures"]
+            data["precipitation"]=data["precipitation"]/data["heures"]
+            L.append(data)
+
+        return Response(L)
+
+###################################################################################
+
+#class MeteoListView(APIView, PaginationClass, FiltreClass):
+#    model_class=Meteo
+#    serializer_class=MeteoListSerializer
+
+#    def get(self, request, format=None):
+#        context={"request":request}
+#        queryset = self.model_class.objects.all()
+#        queryset = self.query_parms(request,queryset,self.model_class)
+#        queryset_to_show, nombre_de_pages = self.paginate_queryset(request, queryset)
+#        if queryset_to_show is not None:
+#            serializer = self.serializer_class(queryset_to_show, many=True,context=context)
+#            data={
+#                "count":queryset.count(),
+#                "number of pages":nombre_de_pages,
+#                "results":serializer.data
+#                }
+#        else:
+#            data={
+#                "error in parameters":"page_nombre and page must be int()",
+#                }
+#        return Response(data)
+
+#class MeteoDetailView(APIView):
+#    model_class=Meteo
+#    serializer_class=MeteoDetailSerializer
+
+#    def get_object(self, id):
+#        try:
+#            return self.model_class.objects.get(id=id)
+#        except self.model_class.DoesNotExist:
+#            raise Http404
+
+#    def get(self, request, id, format=None):
+#        context={"request":request}
+#        queryset = self.get_object(id)
+#        serializer = self.serializer_class(queryset,context=context)
+#        return Response(serializer.data)
 
 class MeteoUpdateView(APIView):
     model_class=Meteo
-    serializer_class=MeteoDetailSerializer
+    #serializer_class=MeteoDetailSerializer
 
-    def get(self, request, format=None):
-        try:
-            recup_meteo(50.6,3.06)
-            success=1
-        except:
-            success=0
-        return Response({"sucess":success})
+    #def get(self, request, format=None):
+    #    try:
+    #        recup_meteo(50.6,3.06)
+    #        success=1
+    #    except:
+    #        success=0
+    #    return Response({"sucess":success})
 
-###################################################################################
+    def post(self, request, format=None):
+        context={"request":request}
+        import geopy.distance
+        from datetime import datetime, timedelta
 
-class LocalisationView(APIView):
+        default_distance=50
+        delta_default = timedelta(
+            days=0,
+            seconds=0,
+            microseconds=0,
+            milliseconds=0,
+            minutes=0,
+            hours=1,
+            weeks=0
+)
 
-    def post(self, request):
-        a=0
+        data=request.POST.dict()
+        longitude=data['longitude']
+        latitude=data['latitude']
 
-###################################################################################
+        cities = City.objects.all().order_by('location_longitude', 'location_latitude')
+
+        for city in cities:
+            coords_1 = (latitude, longitude)
+            coords_2 = (city.location_latitude, city.location_longitude)
+            print(coords_1,coords_2)
+            distance = geopy.distance.vincenty(coords_1, coords_2).km
+            if distance<=default_distance:
+                print(datetime.now())
+                print(city.last_load.replace(tzinfo=None))
+                print(delta_default)
+                print(datetime.now() - city.last_load.replace(tzinfo=None))
+                print(datetime.now() - city.last_load.replace(tzinfo=None) > delta_default)
+                if datetime.now() - city.last_load.replace(tzinfo=None) > delta_default:
+                    city = recup_meteo(latitude,longitude,city)
+                queryset=Meteo.objects.filter(location_latitude=city.location_latitude, location_longitude=city.location_longitude)
+                serilizer=MeteoListSerializer(queryset, many=True,context=context)
+                return Response({"city_id":city.id})
+                return Response(serilizer.data)
+
+        city = recup_meteo(latitude,longitude)
+        queryset=Meteo.objects.filter(location_latitude=city.location_latitude, location_longitude=city.location_longitude)
+        serilizer=MeteoListSerializer(queryset, many=True,context=context)
+        return Response({"city_id":city.id})
+        return Response(serilizer.data)
+
+####################################################################################
+
+#class LocalisationView(APIView):
+
+#    def post(self, request):
+#        a=0
+
+####################################################################################
+
+#class MeteotestView(APIView):
+
+#    def post(self, request):
+#        a=request.POST.dict()
+#        return Response(a)

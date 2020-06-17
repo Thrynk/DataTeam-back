@@ -48,9 +48,16 @@ urlpatterns = [
     path('anecdote/', views.AnecdoteListView.as_view(), name='anecdote-list'),
     path('anecdote/<str:id>/', views.AnecdoteDetailView.as_view(), name='anecdote-detail'),
 
-    path('meteo/', views.MeteoListView.as_view(), name='meteo-list'),
+    #path('meteo/', views.MeteoListView.as_view(), name='meteo-list'),
+
+    path('city/', views.CityListView.as_view(), name='city-list'),
+    path('city/<str:id>/', views.CityDetailView.as_view(), name='city-detail'), # heure par heure des 7 jours avec possibilité de dire date=date
+    path('city/<str:id>/moyenne/', views.CityMoyenneListView.as_view(), name='city-moyenne-detail'), # calcule moyenne des jours
+
     #path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'),
     path('meteo/update/', views.MeteoUpdateView.as_view(), name='meteo-update'),
+    #path('meteo/test', views.MeteoTestView.as_view(), name='meteo-test'),
+
 
     #path('flag/<str:taille>/<str:Country_code>', views.FlagDetailView.as_view(), name='flag-detail'),
 

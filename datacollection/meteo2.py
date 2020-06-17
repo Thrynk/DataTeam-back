@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.utils import timezone
+from django.db.models import Q
 
-def recup_meteo(latitude, longitude):
-    from api.models import Meteo 
+
+def recup_meteo(latitude, longitude, city=None):
+    from api.models import Meteo , City
+    from datetime import datetime 
+    from geopy.geocoders import Nominatim
 
     # Import Meteo model from Django
     import os
- 
-    # import datetime to get date
-    import datetime
     
     # Import requests and Basic auth
     import requests
@@ -17,7 +18,7 @@ def recup_meteo(latitude, longitude):
     # request data from API
     url_base = 'https://api.meteomatics.com/'
     
-    date = datetime.datetime.now()
+    date = datetime.now()
     #print(timezone.now())
     dateString = date.strftime("%Y-%m-%dT%H:%M:%SZ")
     
@@ -50,28 +51,39 @@ def recup_meteo(latitude, longitude):
     ## precipitation
     #print(len(data["data"][2]["coordinates"][0]["dates"]))
     
-    #Meteo.objects.all().delete()
+    Meteo.objects.filter(location_latitude=latitude, location_longitude=longitude).delete()
+    if city is None:
+        geolocator = Nominatim("my_application")
+        location = geolocator.reverse("{latitude}, {longitude}".format(latitude=latitude, longitude=longitude), exactly_one=True) 
+        #location.address.split(",")[0]
+        city=City.objects.create(location_longitude=longitude, location_latitude=latitude)#, name=location.address.split(",")[4])
+    else:
+        city=City.objects.get(id=city.id)
+        city.last_load=datetime.now()
+        city.save()
+        Meteo.objects.filter(city=city).delete()
 
     for i in range(0, len(data["data"][0]["coordinates"][0]["dates"])):
         #print((data["data"][0]["coordinates"][0]["dates"][i]["date"])+"+00:00")
         dict={
+            "city":city,
             "location_latitude":latitude,
             "location_longitude":longitude,
             "temperature":data["data"][0]["coordinates"][0]["dates"][i]["value"],
             "humidity":data["data"][1]["coordinates"][0]["dates"][i]["value"],
             "precipitation":data["data"][2]["coordinates"][0]["dates"][i]["value"],
-            "date":data["data"][0]["coordinates"][0]["dates"][i]["date"],
+            "date_time":data["data"][0]["coordinates"][0]["dates"][i]["date"],
             }
-        try:
-            queryset = Meteo.objects.get(date=date)
-            for key, value in dict.items():
-                setattr(obj, key, value)
-                obj.save()
-                date=date
-        except Meteo.DoesNotExist:
-            queryset = Meteo(**dict)
-            queryset.save()
+        queryset = Meteo(**dict)
+        queryset.save()
 
+    return city
+
+
+#def meteo(latitude,longitude):
+#    queryset = Meteo.objects.filter(
+#        Q(latitude__gte=latitude)
+#        )
         
 if __name__ == "__main__":
     latitude = 50.6

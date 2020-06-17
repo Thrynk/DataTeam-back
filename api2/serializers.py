@@ -460,20 +460,41 @@ class MeteoListSerializer(serializers.ModelSerializer):
             'temperature',
             'humidity',
             'precipitation',
-            'date',
+            'date_time',
             #'url_detail',
             ]
 
-class MeteoDetailSerializer(serializers.ModelSerializer):
+#class MeteoDetailSerializer(serializers.ModelSerializer):
+
+#    class Meta:
+#        model = my_models.Meteo
+#        fields = [
+#            'id',
+#            'location_latitude',
+#            'location_longitude',
+#            'temperature',
+#            'humidity',
+#            'precipitation',
+#            'date_time',
+#            ]
+
+####################################################################################
+
+class CityListSerializer(serializers.ModelSerializer):
+#class TennisPlayerSerializer(serializers.HyperlinkedModelSerializer):
+
+    url_detail = serializers.HyperlinkedIdentityField(
+        view_name='api2:city-detail',
+        lookup_field='id'
+        )
 
     class Meta:
-        model = my_models.Meteo
+        model = my_models.City
         fields = [
             'id',
+            'name',
             'location_latitude',
             'location_longitude',
-            'temperature',
-            'humidity',
-            'precipitation',
-            'date',
+            'last_load',
+            'url_detail',
             ]

@@ -1,4 +1,7 @@
 from django.db import models
+from datetime import datetime, timezone
+
+
 
 # Create your models here.
 
@@ -105,13 +108,21 @@ class Anecdote(models.Model):
     def __str__(self):
         return self.title
 
+class City(models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True)
+    location_latitude = models.DecimalField(max_digits=15, decimal_places=8)
+    location_longitude = models.DecimalField(max_digits=15, decimal_places=8)
+    last_load=models.DateTimeField(default=datetime.now, blank=True)
+
 class Meteo(models.Model):
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
     location_latitude = models.DecimalField(max_digits=15, decimal_places=8)
     location_longitude = models.DecimalField(max_digits=15, decimal_places=8)
     temperature = models.DecimalField(max_digits=5, decimal_places=2)
     humidity = models.DecimalField(max_digits=5, decimal_places=2)
     precipitation = models.DecimalField(max_digits=5, decimal_places=2)
-    date = models.CharField(max_length=50)
+    date_time = models.CharField(max_length=50)
+    #date = models.CharField(max_length=50)
 
 class Flag(models.Model):
     country_id = models.CharField(max_length=25)
