@@ -633,9 +633,9 @@ class CityMoyenneListView(APIView, PaginationClass, FiltreClass):
                 data["temperature"]+=q.temperature
                 data["humidity"]+=q.humidity
                 data["precipitation"]+=q.precipitation
-            data["temperature"]=data["temperature"]/data["heures"]
-            data["humidity"]=data["humidity"]/data["heures"]
-            data["precipitation"]=data["precipitation"]/data["heures"]
+            data["temperature"]=math.ceil(data["temperature"]/data["heures"])
+            data["humidity"]=math.ceil(data["humidity"]/data["heures"])
+            data["precipitation"]=math.ceil(data["precipitation"]/data["heures"])
             L.append(data)
 
         return Response(L)
