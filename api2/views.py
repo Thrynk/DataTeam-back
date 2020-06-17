@@ -708,7 +708,9 @@ class MeteoUpdateView(APIView):
             weeks=0
 )
 
-        data=request.POST.dict()
+        #data=request.POST.dict()
+        data=request.data
+
         longitude=data["longitude"]
         latitude=data["latitude"]
 
