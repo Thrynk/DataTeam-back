@@ -25,7 +25,7 @@ def recup_meteo(latitude, longitude, city=None):
     number_of_days = 7
     number_of_values_per_hour = 1
     
-    temperature_parameter = 't_0m:C'
+    temperature_parameter = 't_2m:C'
     humidity_parameter = 'relative_humidity_2m:p'
     precipitation_parameter = 'precip_1h:mm'
     
@@ -40,7 +40,7 @@ def recup_meteo(latitude, longitude, city=None):
     
     r = requests.get(url, auth=HTTPBasicAuth('isen_meunier', 'rT2ql81CVUzpS'))
 
-    #a='https://api.meteomatics.com/2020-06-15T17:18:30ZP7D:PT1H/t_0m:C,relative_humidity_2m:p,precip_1h:mm/50.6,3.06/json?model=mix'
+    #a='https://api.meteomatics.com/2020-06-15T17:18:30ZP7D:PT1H/t_2m:C,relative_humidity_2m:p,precip_1h:mm/50.6,3.06/json?model=mix'
    
     data = r.json()
     

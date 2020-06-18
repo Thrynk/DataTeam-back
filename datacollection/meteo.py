@@ -20,7 +20,7 @@ def recup_meteo(latitude, longitude):
     number_of_days = 7
     number_of_values_per_hour = 1
     
-    temperature_parameter = 't_0m:C'
+    temperature_parameter = 't_2m:C'
     humidity_parameter = 'relative_humidity_2m:p'
     precipitation_parameter = 'precip_1h:mm'
     
