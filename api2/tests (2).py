@@ -75,3 +75,7 @@ def plusdeux(a):
 b = plusdeux(a)
 
 print(a)
+
+#90 100 humidité pluie
+#50 90 soleil nuage
+#< 50 soleil

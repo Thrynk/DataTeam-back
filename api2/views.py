@@ -628,6 +628,7 @@ class CityMoyenneListView(APIView, PaginationClass, FiltreClass):
                 "temperature": 0,
                 "humidity": 0,
                 "precipitation": 0,
+                "url_meteo_image":"",
                 }
             for q in query:
                 data["temperature"]+=q.temperature
@@ -636,9 +637,51 @@ class CityMoyenneListView(APIView, PaginationClass, FiltreClass):
             data["temperature"]=math.ceil(data["temperature"]/data["heures"])
             data["humidity"]=math.ceil(data["humidity"]/data["heures"])
             data["precipitation"]=math.ceil(data["precipitation"]/data["heures"])
+
+            humidity=data["humidity"]
+            if humidity>80 and humidity<100:
+                image_name="pluie"
+            elif humidity>0 and humidity<30:
+                image_name="soleil"
+            else:
+                image_name="soleil_nuage"
+            data["url_meteo_image"]=reverse('api2:meteo-image-name', kwargs={"image_name":image_name},request=request)
             L.append(data)
 
         return Response(L)
+
+
+class CityImageView(APIView, PaginationClass, FiltreClass):
+    model_class=Meteo
+
+    def get_object(self, id):
+        try:
+            return self.model_class.objects.get(id=id)
+        except TennisPlayer.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id, format=None):
+        context={"request":self.request}
+        queryset = self.get_object(id)
+
+        humidity=queryset.humidity
+        temperature=queryset.temperature
+        precipitation=queryset.precipitation
+
+        switch={
+            "pluie":"pluie.png",
+            "soleil":"soleil.png",
+            "soleil_nuage":"soleil_nuage.png",
+            }
+        if humidity>80 and humidity<100:
+            image_name="pluie"
+        elif humidity>0 and humidity<30:
+            image_name="soleil"
+        else:
+            image_name="soleil_nuage"
+
+        img = open('static/meteo/{image_name}'.format(image_name=switch[image_name]), 'rb')
+        return FileResponse(img)
 
 ###################################################################################
 
@@ -744,14 +787,45 @@ class MeteoImageView(APIView, PaginationClass, FiltreClass):
     def get(self, request, id, format=None):
         context={"request":self.request}
         queryset = self.get_object(id)
+
+        humidity=queryset.humidity
+        temperature=queryset.temperature
+        precipitation=queryset.precipitation
+
         switch={
             "pluie":"pluie.png",
             "soleil":"soleil.png",
             "soleil_nuage":"soleil_nuage.png",
             }
-        img = open('static/meteo/{image_name}'.format(image_name=switch['pluie']), 'rb')
+        if humidity>80 and humidity<100:
+            image_name="pluie"
+        elif humidity>0 and humidity<30:
+            image_name="soleil"
+        else:
+            image_name="soleil_nuage"
+
+        img = open('static/meteo/{image_name}'.format(image_name=switch[image_name]), 'rb')
         return FileResponse(img)
 
+####################################################################################
+
+class MeteoImageNameView(APIView, PaginationClass, FiltreClass):
+    model_class=Meteo
+
+    def get_object(self, id):
+        try:
+            return self.model_class.objects.get(id=id)
+        except TennisPlayer.DoesNotExist:
+            raise Http404
+
+    def get(self, request, image_name, format=None):
+        switch={
+            "pluie":"pluie.png",
+            "soleil":"soleil.png",
+            "soleil_nuage":"soleil_nuage.png",
+            }
+        img = open('static/meteo/{image_name}'.format(image_name=switch[image_name]), 'rb')
+        return FileResponse(img)
 
 ####################################################################################
 
@@ -767,3 +841,7 @@ class MeteoImageView(APIView, PaginationClass, FiltreClass):
 #    def post(self, request):
 #        a=request.POST.dict()
 #        return Response(a)
+
+####################################################################################
+
+

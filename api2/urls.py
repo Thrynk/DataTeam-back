@@ -54,7 +54,9 @@ urlpatterns = [
     path('city/<str:id>/', views.CityDetailView.as_view(), name='city-detail'), # heure par heure des 7 jours avec possibilité de dire date=date
     path('city/<str:id>/moyenne/', views.CityMoyenneListView.as_view(), name='city-moyenne-detail'), # calcule moyenne des jours
 
-    #path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'),
+
+    path('meteo/image/<str:image_name>/', views.MeteoImageNameView.as_view(), name='meteo-image-name'),
+
     path('meteo/update/', views.MeteoUpdateView.as_view(), name='meteo-update'),
     path('meteo/', views.MeteoListView.as_view(), name='meteo-list'),
     path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'),
