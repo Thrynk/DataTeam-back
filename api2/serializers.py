@@ -444,12 +444,17 @@ class AnecdoteDetailSerializer(serializers.ModelSerializer):
 ####################################################################################
 
 class MeteoListSerializer(serializers.ModelSerializer):
-#class TennisPlayerSerializer(serializers.HyperlinkedModelSerializer):
 
-    #url_detail = serializers.HyperlinkedIdentityField(
-    #    view_name='api2:meteo-detail',
-    #    lookup_field='id'
-    #    )
+    url_detail = serializers.HyperlinkedIdentityField(
+        view_name='api2:meteo-detail',
+        lookup_field='id'
+        )
+
+    url_meteo_image = HyperlinkedIdentityFieldWithLookup_fields(
+        view_name='api2:meteo-image',
+        lookup_fields=[('id', 'id'),
+                        ],
+        )
 
     class Meta:
         model = my_models.Meteo
@@ -461,22 +466,30 @@ class MeteoListSerializer(serializers.ModelSerializer):
             'humidity',
             'precipitation',
             'date_time',
-            #'url_detail',
+            'url_detail',
+            'url_meteo_image',
             ]
 
-#class MeteoDetailSerializer(serializers.ModelSerializer):
+class MeteoDetailSerializer(serializers.ModelSerializer):
 
-#    class Meta:
-#        model = my_models.Meteo
-#        fields = [
-#            'id',
-#            'location_latitude',
-#            'location_longitude',
-#            'temperature',
-#            'humidity',
-#            'precipitation',
-#            'date_time',
-#            ]
+    url_meteo_image = HyperlinkedIdentityFieldWithLookup_fields(
+        view_name='api2:meteo-image',
+        lookup_fields=[('id', 'id'),
+                        ],
+        )
+
+    class Meta:
+        model = my_models.Meteo
+        fields = [
+            'id',
+            'location_latitude',
+            'location_longitude',
+            'temperature',
+            'humidity',
+            'precipitation',
+            'date_time',
+            'url_meteo_image',
+            ]
 
 ####################################################################################
 

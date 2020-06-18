@@ -56,6 +56,9 @@ urlpatterns = [
 
     #path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'),
     path('meteo/update/', views.MeteoUpdateView.as_view(), name='meteo-update'),
+    path('meteo/', views.MeteoListView.as_view(), name='meteo-list'),
+    path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'),
+    path('meteo/<str:id>/image/', views.MeteoImageView.as_view(), name='meteo-image'),
     #path('meteo/test', views.MeteoTestView.as_view(), name='meteo-test'),
 
 
