@@ -621,10 +621,10 @@ class CityMoyenneListView(APIView, PaginationClass, FiltreClass):
 
         for queryset in List:
             data={
-                "heures":query.count(),
-                "date_time": query.first().date_time,
-                "location_latitude": query.first().location_latitude,
-                "location_longitude": query.first().location_longitude,
+                "heures":queryset.count(),
+                "date_time": queryset.first().date_time,
+                "location_latitude": queryset.first().location_latitude,
+                "location_longitude": queryset.first().location_longitude,
                 "temperature": 0,
                 "humidity": 0,
                 "precipitation": 0,
