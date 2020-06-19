@@ -174,6 +174,13 @@ class MatchDetailSerializer(serializers.ModelSerializer):
                         ],
         )
 
+    url_tennisplayersstats = HyperlinkedIdentityFieldWithLookup_fields(
+        view_name='api2:match-tennisplayersstats',
+        lookup_fields=[('id', 'id'),
+                        ],
+        )
+    
+
     class Meta:
         model = my_models.Match
         fields=[
@@ -192,8 +199,9 @@ class MatchDetailSerializer(serializers.ModelSerializer):
             'date',
             'round',
             'url_stats',
+            "url_tennisplayersstats",
             'all_match_winner',
-            'all_match_loser'
+            'all_match_loser',
             ]
 
     def get_winner_name(self, obj):

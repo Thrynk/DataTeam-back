@@ -36,7 +36,7 @@ urlpatterns = [
     path('match/<str:id>/', views.MatchDetailView.as_view(), name='match-detail'), # affiche les detail du match n°id
     path('match/<str:id>/stats/', views.MatchStatsView.as_view(), name='match-stats'), # liste toutes les stats du match
 
-    path('match/<str:id>/tennisplayersstats/', views.MatchPlayersStatsView.as_view(), name='match-stats'), # liste toutes les stats des deux joueurs du match
+    path('match/<str:id>/tennisplayersstats/', views.MatchPlayersStatsView.as_view(), name='match-tennisplayersstats'), # liste toutes les stats des deux joueurs du match
 
     path('matchStats/', views.MatchStatsListView.as_view(), name='matchStats-list'), # liste les stats de tous les matchs
     path('matchStats/<str:id>/', views.MatchStatsDetailView.as_view(), name='matchStats-detail'), # liste les stats du match n°id
