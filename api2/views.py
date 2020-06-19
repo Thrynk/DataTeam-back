@@ -23,6 +23,10 @@ import math
 
 # Create your views here.
 
+# explication du code :
+#   chaque views est relier a une url
+#   la descriptions de ce que fait la view est donc affichée a coté de l'url dans le fichier url.py
+
 ###################################################################################
 
 class PaginationClass:
@@ -37,8 +41,8 @@ class PaginationClass:
             page_nombre_default = nombre de queryset par page (default=10)
 
         parametres de la requete:
-            page_nombre : nombre de queryset par page (default=page_nombre_default)
-            page : la page dans laquelle nous voulons etre (default=1)
+            ?page_nombre= : nombre de queryset par page (default=page_nombre_default)
+            ?page= : la page dans laquelle nous voulons etre (default=1)
 
         retourne :
             None : en cas d'erreurs dans les parametres
@@ -52,10 +56,6 @@ class PaginationClass:
             try:
                 page=int(page)
             except:
-                #data={
-                #    "error in parameters":"page must be a int()",
-                #    }
-                #return Response(data)
                 return None, None
         if page_nombre is None:
             page_nombre=page_nombre_default
@@ -65,10 +65,6 @@ class PaginationClass:
             try:
                 page_nombre=int(page_nombre)
             except:
-                #data={
-                #    "error in parameters":"page_nombre must be a int()",
-                #    }
-                #return Response(data)
                 return None, None
         min=page*page_nombre-page_nombre
         max=page*page_nombre
@@ -89,10 +85,10 @@ class FiltreClass:
             model_class,
 
         retourne le queryset filtrer en fonction des parametres de l'url
+        ou retourne un status 404 not found
+        exemple : ?date='2020-06-01'
         '''
         others_parms=['orderby','page','page_nombre']
-
-        fieldsNames=[field.name for field in model_class._meta.fields] # exemple ['name','firstname']
 
         orderby = request.GET.get('orderby')
         if orderby is None:
@@ -115,7 +111,7 @@ class FiltreClass:
             request,
             default,
 
-        retourne la taille de l'image
+        retourne la taille de l'image (differentes tailles sont rangées en dossier)
         '''
         tailles_possibles=['16','24','32','48','64']
         taille = request.GET.get('taille')
@@ -125,6 +121,8 @@ class FiltreClass:
             raise Http404
         else:
             return taille
+
+####################################################################################
 
 class ApiRootListView(APIView):
     
@@ -558,38 +556,13 @@ class CityMoyenneListView(APIView, PaginationClass, FiltreClass):
         except self.model_class.DoesNotExist:
             raise Http404
 
-    #def regroupe_queryset(self,queryset,prm,nb=None):
-    #    queryset_copie=queryset.all()
-
-    #    hasattr(queryset_copie.first(),prm)
-
-    #    L=[]
-
-    #    while queryset_copie.count():
-    #        if nb is not None:
-    #            try:
-    #                ref=getattr(queryset.exclude(**filtre).first(),prm)[0:nb]
-    #            except:
-    #                ref=getattr(queryset.first(),prm)[0:nb]
-    #            filtre={"{}__icontains".format(prm):ref}
-    #        else:
-    #            try:
-    #                ref=getattr(queryset.exclude(**filtre).first(),prm)
-    #            except:
-    #                ref=getattr(queryset.first(),prm)
-    #            filtre={"{}".format(prm):ref}
-    #        q = queryset.filter(**filtre)
-    #        L.append(q)
-    #        #q.delete()
-    #    return L
-
     def regroupe_queryset(self,queryset,prm,nb=None):
+        """
+        regroupe les queryset dans une liste en fonction du parametre prm
+        """
         queryset_copie=queryset.all()
-
         hasattr(queryset_copie.first(),prm)
-
         L=[]
-
         while queryset_copie.count():
             if nb is not None:
                 ref=getattr(queryset_copie.first(),prm)[0:nb]
@@ -607,19 +580,12 @@ class CityMoyenneListView(APIView, PaginationClass, FiltreClass):
         queryset = Meteo.objects.all().filter(city=self.get_object(id))
         queryset = self.query_parms(request,queryset,Meteo)
 
-        print(queryset)
-        date_time=queryset.first().date_time[0:10]
-        location_latitude=1
-        location_longitude=1
-        temperature_moyenne=1
-        humidity_moyenne=1
-        temperature_moyenne=1
-        precipitation_mpyenne=1
-
         List=self.regroupe_queryset(queryset,"date_time",10)
         L=[]
 
-        for query in List:
+        data_a_moyenner=["temperature", "humidity", "precipitation"]
+
+        for queryset in List:
             data={
                 "heures":query.count(),
                 "date_time": query.first().date_time,
@@ -630,13 +596,18 @@ class CityMoyenneListView(APIView, PaginationClass, FiltreClass):
                 "precipitation": 0,
                 "url_meteo_image":"",
                 }
-            for q in query:
-                data["temperature"]+=q.temperature
-                data["humidity"]+=q.humidity
-                data["precipitation"]+=q.precipitation
-            data["temperature"]=math.ceil(data["temperature"]/data["heures"])
-            data["humidity"]=math.ceil(data["humidity"]/data["heures"])
-            data["precipitation"]=math.ceil(data["precipitation"]/data["heures"])
+            for q in queryset:
+                for i in data_a_moyenner:
+                    data[i] += getattr(q,i)
+                #data["temperature"]+=q.temperature
+                #data["humidity"]+=q.humidity
+                #data["precipitation"]+=q.precipitation
+
+            for i in data_a_moyenner:
+                    data[i] = math.ceil(data[i]/data["heures"])
+            #data["temperature"]=math.ceil(data["temperature"]/data["heures"])
+            #data["humidity"]=math.ceil(data["humidity"]/data["heures"])
+            #data["precipitation"]=math.ceil(data["precipitation"]/data["heures"])
 
             humidity=data["humidity"]
             if humidity>80 and humidity<100:
@@ -645,42 +616,42 @@ class CityMoyenneListView(APIView, PaginationClass, FiltreClass):
                 image_name="soleil"
             else:
                 image_name="soleil_nuage"
-            data["url_meteo_image"]=reverse('api2:meteo-image-name', kwargs={"image_name":image_name},request=request)
+            data["url_meteo_image"]=reverse('api2:meteo-image-name', kwargs={"image_name":image_name}, request=request)
             L.append(data)
 
         return Response(L)
 
 
-class CityImageView(APIView, PaginationClass, FiltreClass):
-    model_class=Meteo
+#class CityImageView(APIView, PaginationClass, FiltreClass):
+#    model_class=Meteo
 
-    def get_object(self, id):
-        try:
-            return self.model_class.objects.get(id=id)
-        except TennisPlayer.DoesNotExist:
-            raise Http404
+#    def get_object(self, id):
+#        try:
+#            return self.model_class.objects.get(id=id)
+#        except TennisPlayer.DoesNotExist:
+#            raise Http404
 
-    def get(self, request, id, format=None):
-        context={"request":self.request}
-        queryset = self.get_object(id)
+#    def get(self, request, id, format=None):
+#        context={"request":self.request}
+#        queryset = self.get_object(id)
 
-        humidity=queryset.humidity
-        temperature=queryset.temperature
-        precipitation=queryset.precipitation
+#        humidity=queryset.humidity
+#        temperature=queryset.temperature
+#        precipitation=queryset.precipitation
 
-        switch={
-            "pluie":"pluie.png",
-            "soleil":"soleil.png",
-            "soleil_nuage":"soleil_nuage.png",
-            }
-        if humidity>80 and humidity<100:
-            image_name="pluie"
-        elif humidity>0 and humidity<30:
-            image_name="soleil"
-        else:
-            image_name="soleil_nuage"
+#        switch={
+#            "pluie":"pluie.png",
+#            "soleil":"soleil.png",
+#            "soleil_nuage":"soleil_nuage.png",
+#            }
+#        if humidity>80 and humidity<100:
+#            image_name="pluie"
+#        elif humidity>0 and humidity<30:
+#            image_name="soleil"
+#        else:
+#            image_name="soleil_nuage"
 
-        img = open('static/meteo/{image_name}'.format(image_name=switch[image_name]), 'rb')
+#        img = open('static/meteo/{image_name}'.format(image_name=switch[image_name]), 'rb')
         return FileResponse(img)
 
 ###################################################################################
@@ -740,8 +711,7 @@ class MeteoUpdateView(APIView):
             minutes=0,
             hours=1,
             weeks=0
-)
-
+            )
         #data=request.POST.dict()
         data=request.data
 

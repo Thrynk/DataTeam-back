@@ -7,7 +7,7 @@ from api import models as my_models
 
 import requests
 
-# un Serializers sert à reprensenter la donnée en un format adapté à une API (Json).
+# un Serializers sert à reprensenter la donnée queryset type de django en un format adapté à une API (ici Json).
 
 ####################################################################################
 
@@ -38,9 +38,7 @@ class HyperlinkedIdentityFieldWithLookup_fields(serializers.HyperlinkedIdentityF
 
 ####################################################################################
 
-
 class TennisPlayerListSerializer(serializers.ModelSerializer):
-#class TennisPlayerSerializer(serializers.HyperlinkedModelSerializer):
 
     url_detail = serializers.HyperlinkedIdentityField(
         view_name='api2:tennisPlayer-detail',
@@ -69,15 +67,10 @@ class TennisPlayerDetailSerializer(serializers.ModelSerializer):
         lookup_field='id'
         )
 
-    #url_flag = HyperlinkedIdentityFieldWithLookup_fields(
     url_flag = serializers.HyperlinkedIdentityField(
         view_name='api2:tennisPlayer-flag',
         lookup_field='id',
-        #lookup_fields=[('Country_code','obj.nationality'),
-        #               ('taille','request.parser_context["kwargs"]["taille"]')]
         )
-
-    #url_flag=serializers.SerializerMethodField()
 
     class Meta:
         model = my_models.TennisPlayer

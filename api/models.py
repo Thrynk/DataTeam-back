@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 
 # Create your models here.
 
+# genereation de table sql a l'aide de model django
+# exemple ici la table api_tennisplayer sera crée avec tous ces champs 
 class TennisPlayer(models.Model):
 
     #NATIONALITY_CHOICES = (
@@ -122,7 +124,6 @@ class Meteo(models.Model):
     humidity = models.DecimalField(max_digits=5, decimal_places=2)
     precipitation = models.DecimalField(max_digits=5, decimal_places=2)
     date_time = models.CharField(max_length=50)
-    #date = models.CharField(max_length=50)
 
 class Flag(models.Model):
     country_id = models.CharField(max_length=25)
