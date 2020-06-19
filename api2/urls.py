@@ -59,6 +59,6 @@ urlpatterns = [
 
     path('meteo/update/', views.MeteoUpdateView.as_view(), name='meteo-update'), # permet de faire une requete post de la latitude/longitude et renvois l'id de la "ville"
     #path('meteo/', views.MeteoListView.as_view(), name='meteo-list'), # Liste toutes les meteo
-    #path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'), # affiche le detail de la meteo n°id
+    path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'), # affiche le detail de la meteo n°id
     path('meteo/<str:id>/image/', views.MeteoImageView.as_view(), name='meteo-image'), # renvois l'image de la meteo n°id en fonction de l'humitdité
 ]
