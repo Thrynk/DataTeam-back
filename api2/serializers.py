@@ -260,7 +260,7 @@ class MatchStatsDetailSerializer(serializers.ModelSerializer):
         model = my_models.MatchStats
         fields=[
             'id',
-            'match'
+            'match',
             'winner_ace',
             'winner_df',
             'winner_serve_points',

@@ -99,6 +99,9 @@ class TennisPlayerStats(models.Model):
     others_2nd_won = models.IntegerField()
     others_breakpoints_saved = models.IntegerField()
     others_breakpoints_faced = models.IntegerField()
+    #class Meta:
+    #    managed = False
+    #    db_table = 'app_chargesummary'
 
     def __str__(self):
         return self.player.name
