@@ -82,6 +82,7 @@ class MatchStats(models.Model):
         return self.match.tournament_event.tournament.name
 
 class TennisPlayerStats(models.Model):
+
     player = models.OneToOneField(TennisPlayer, on_delete=models.CASCADE)
     matches_won=models.IntegerField()
     matches_lost=models.IntegerField()
@@ -99,12 +100,11 @@ class TennisPlayerStats(models.Model):
     others_2nd_won = models.IntegerField()
     others_breakpoints_saved = models.IntegerField()
     others_breakpoints_faced = models.IntegerField()
-    #class Meta:
-    #    managed = False
-    #    db_table = 'app_chargesummary'
 
     def __str__(self):
         return self.player.name
+
+
 
 class Anecdote(models.Model):
     title = models.CharField(max_length=50)
@@ -132,3 +132,26 @@ class Flag(models.Model):
     country_id = models.CharField(max_length=25)
     flag_png = models.CharField(max_length=25)
 
+class Player_stats(models.Model):
+
+    ace = models.IntegerField()
+    df = models.IntegerField()
+    serve_points = models.IntegerField()
+    first_in = models.IntegerField()
+    first_won = models.IntegerField()
+    second_won = models.IntegerField()
+    first_serve_success_percentage = models.DecimalField(max_digits=15, decimal_places=2)
+    first_serve_won_percentage = models.DecimalField(max_digits=15, decimal_places=2)
+    second_serve_won_percentage = models.DecimalField(max_digits=15, decimal_places=2)
+    ace_percentage = models.DecimalField(max_digits=15, decimal_places=2)
+    df_percentage = models.DecimalField(max_digits=15, decimal_places=2)
+    firstname = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
+    player_id = models.BigIntegerField(primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'player_stats'
+
+    def __str__(self):
+        return self.player.name

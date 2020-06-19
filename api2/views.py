@@ -130,12 +130,12 @@ class ApiRootListView(APIView):
         data = {
             'tennisPlayer-url': reverse('api2:tennisPlayer-list', request=request),
             'match-url': reverse('api2:match-list', request=request),
-            'tennisPlayerStats-url': reverse('api2:tennisPlayerStats-list', request=request),
+            #'tennisPlayerStats-url': reverse('api2:tennisPlayerStats-list', request=request),
             'matchStats-url': reverse('api2:matchStats-list', request=request),
             'tournament-url': reverse('api2:tournament-list', request=request),
             'tournamentEvent-url': reverse('api2:tournamentEvent-list', request=request),
             'anecdote-url': reverse('api2:anecdote-list', request=request),
-            'meteo-url': reverse('api2:meteo-list', request=request),
+            #'meteo-url': reverse('api2:meteo-list', request=request),
             'city-url': reverse('api2:city-list', request=request),
         }
         return Response(data)
@@ -216,9 +216,23 @@ class TennisPlayerMatchView(APIView, PaginationClass, FiltreClass):
         return Response(data)
 
 class TennisPlayerStatsView(APIView):
+    model_class=Player_stats
+    serializer_class=Player_StatsSerializer
+
+    #def get(self, request, id, format=None):
+    #    return redirect('api2:tennisPlayerStats-detail',id=id)
+
+    def get_object(self, id):
+        try:
+            return self.model_class.objects.get(player_id=id)
+        except self.model_class.DoesNotExist:
+            raise Http404
 
     def get(self, request, id, format=None):
-        return redirect('api2:tennisPlayerStats-detail',id=id)
+        context={"request":request}
+        queryset = self.get_object(id)
+        serializer = self.serializer_class(queryset,context=context)
+        return Response(serializer.data)
 
 class TennisPlayerFlagView(APIView, PaginationClass, FiltreClass):
     model_class=TennisPlayer
@@ -363,6 +377,26 @@ class MatchStatsView(APIView):
     def get(self, request, id, format=None):
         return redirect('api2:matchStats-detail',id=id)
 
+class MatchPlayersStatsView(APIView):
+    def get(self, request, id, format=None):
+        url=request.build_absolute_uri('/api2/match/{id}/'.format(id=str(id)))
+        content = requests.get(url)
+        data = content.json()
+        winner_id=data["winner"]
+        loser_id=data["loser"]
+        #print(winner_id)
+        #print(loser_id)
+        url_winner_stats=request.build_absolute_uri('/api2/tennisPlayer/{id}/stats/'.format(id=str(winner_id)))
+        url_loser_stats=request.build_absolute_uri('/api2/tennisPlayer/{id}/stats/'.format(id=str(loser_id)))
+        content_winner = requests.get(url_winner_stats)
+        print(content_winner)
+        content_loser = requests.get(url_loser_stats)
+        return_data={
+            "winner_stats":content_winner.json(),
+            "loser_stats":content_loser.json(),
+            }
+        return Response(return_data)
+
 ###################################################################################
 
 class MatchStatsListView(APIView, PaginationClass, FiltreClass):
@@ -428,21 +462,21 @@ class TennisPlayerStatsListView(APIView, PaginationClass, FiltreClass):
                 }
         return Response(data)
 
-class TennisPlayerStatsDetailView(APIView):
-    model_class=TennisPlayerStats
-    serializer_class=TennisPlayerStatsDetailSerializer
+#class TennisPlayerStatsDetailView(APIView):
+#    model_class=TennisPlayerStats
+#    serializer_class=TennisPlayerStatsDetailSerializer
 
-    def get_object(self, id):
-        try:
-            return self.model_class.objects.get(id=id)
-        except self.model_class.DoesNotExist:
-            raise Http404
+#    def get_object(self, id):
+#        try:
+#            return self.model_class.objects.get(id=id)
+#        except self.model_class.DoesNotExist:
+#            raise Http404
 
-    def get(self, request, id, format=None):
-        context={"request":request}
-        queryset = self.get_object(id)
-        serializer = self.serializer_class(queryset,context=context)
-        return Response(serializer.data)
+#    def get(self, request, id, format=None):
+#        context={"request":request}
+#        queryset = self.get_object(id)
+#        serializer = self.serializer_class(queryset,context=context)
+#        return Response(serializer.data)
 
 ###################################################################################
 

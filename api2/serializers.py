@@ -314,7 +314,7 @@ class TennisPlayerStatsDetailSerializer(serializers.ModelSerializer):
         model = my_models.TennisPlayerStats
         fields=[
             'id',
-            'player',
+            'player_id',
             'matches_won',
             'matches_lost',
             'sets_won',
@@ -331,6 +331,27 @@ class TennisPlayerStatsDetailSerializer(serializers.ModelSerializer):
             'others_2nd_won',
             'others_breakpoints_saved',
             'others_breakpoints_faced',
+            ]
+
+class Player_StatsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = my_models.Player_stats
+        fields=[
+            'ace',
+            'df',
+            'serve_points',
+            'first_in',
+            'first_won',
+            'second_won',
+            'first_serve_success_percentage',
+            'first_serve_won_percentage',
+            'second_serve_won_percentage',
+            'ace_percentage',
+            'df_percentage',
+            'firstname',
+            'name',
+            'player_id',
             ]
 
 ####################################################################################

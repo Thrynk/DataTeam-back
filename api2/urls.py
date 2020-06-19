@@ -29,12 +29,14 @@ urlpatterns = [
     path('tennisPlayer/<str:id>/match/', views.TennisPlayerMatchView.as_view(), name='tennisPlayer-match'), # liste tous les matchs du joueur
     path('tennisPlayer/<str:id>/stats/', views.TennisPlayerStatsView.as_view(), name='tennisPlayer-stats'), # liste toutes les stats du joueur
 
-    path('tennisPlayerStats/', views.TennisPlayerStatsListView.as_view(), name='tennisPlayerStats-list'), # liste les stats de tous les joueurs
-    path('tennisPlayerStats/<str:id>/', views.TennisPlayerStatsDetailView.as_view(), name='tennisPlayerStats-detail'), # liste les stats du joueur n°id
+    #path('tennisPlayerStats/', views.TennisPlayerStatsListView.as_view(), name='tennisPlayerStats-list'), # liste les stats de tous les joueurs
+    #path('tennisPlayerStats/<str:id>/', views.TennisPlayerStatsDetailView.as_view(), name='tennisPlayerStats-detail'), # liste les stats du joueur n°id
 
     path('match/', views.MatchListView.as_view(), name='match-list'), # liste tous les matchs
     path('match/<str:id>/', views.MatchDetailView.as_view(), name='match-detail'), # affiche les detail du match n°id
     path('match/<str:id>/stats/', views.MatchStatsView.as_view(), name='match-stats'), # liste toutes les stats du match
+
+    path('match/<str:id>/tennisplayersstats/', views.MatchPlayersStatsView.as_view(), name='match-stats'), # liste toutes les stats des deux joueurs du match
 
     path('matchStats/', views.MatchStatsListView.as_view(), name='matchStats-list'), # liste les stats de tous les matchs
     path('matchStats/<str:id>/', views.MatchStatsDetailView.as_view(), name='matchStats-detail'), # liste les stats du match n°id
@@ -56,7 +58,7 @@ urlpatterns = [
                                                                                                          # seulement utilisé pour la view 'city-moyenne-detail'
 
     path('meteo/update/', views.MeteoUpdateView.as_view(), name='meteo-update'), # permet de faire une requete post de la latitude/longitude et renvois l'id de la "ville"
-    path('meteo/', views.MeteoListView.as_view(), name='meteo-list'), # Liste toutes les meteo
-    path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'), # affiche le detail de la meteo n°id
+    #path('meteo/', views.MeteoListView.as_view(), name='meteo-list'), # Liste toutes les meteo
+    #path('meteo/<str:id>/', views.MeteoDetailView.as_view(), name='meteo-detail'), # affiche le detail de la meteo n°id
     path('meteo/<str:id>/image/', views.MeteoImageView.as_view(), name='meteo-image'), # renvois l'image de la meteo n°id en fonction de l'humitdité
 ]
