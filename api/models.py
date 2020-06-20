@@ -155,3 +155,11 @@ class Player_stats(models.Model):
 
     def __str__(self):
         return self.player.name
+
+class Prediction(models.Model):
+    match= models.ForeignKey(Match, on_delete=models.CASCADE, related_name="match_id")
+    player1 = models.ForeignKey(TennisPlayer, on_delete=models.CASCADE, related_name="player1_id")
+    player2 = models.ForeignKey(TennisPlayer, on_delete=models.CASCADE, related_name="player2_id")
+    player1_proba = models.DecimalField(max_digits=6, decimal_places=4)
+    player2_proba = models.DecimalField(max_digits=6, decimal_places=4)
+
