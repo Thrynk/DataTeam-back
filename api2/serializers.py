@@ -576,13 +576,25 @@ class CityListSerializer(serializers.ModelSerializer):
 
 class PredictionSerializer(serializers.ModelSerializer):
 
+    player1_name = serializers.SerializerMethodField()
+    player2_name = serializers.SerializerMethodField()
+
+
     class Meta:
         model = my_models.Prediction
         fields = [
             'id',
             'match',
             'player1',
+            'player1_name',
             'player1_proba',
             'player2',
+            'player2_name',
             'player2_proba',
             ]
+
+    def get_player1_name(self, obj):
+        return my_models.TennisPlayer.objects.get(id=obj.player1.id).name + " " + my_models.TennisPlayer.objects.get(id=obj.player1.id).firstname
+
+    def get_player2_name(self, obj):
+        return my_models.TennisPlayer.objects.get(id=obj.player2.id).name + " " + my_models.TennisPlayer.objects.get(id=obj.player2.id).firstname
