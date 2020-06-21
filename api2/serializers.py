@@ -579,6 +579,7 @@ class PredictionSerializer(serializers.ModelSerializer):
     player1_name = serializers.SerializerMethodField()
     player2_name = serializers.SerializerMethodField()
 
+    winner = serializers.SerializerMethodField()
 
     class Meta:
         model = my_models.Prediction
@@ -591,10 +592,16 @@ class PredictionSerializer(serializers.ModelSerializer):
             'player2',
             'player2_name',
             'player2_proba',
+            'winner',
             ]
 
     def get_player1_name(self, obj):
+        return obj.player1.name + " " + obj.player1.firstname
         return my_models.TennisPlayer.objects.get(id=obj.player1.id).name + " " + my_models.TennisPlayer.objects.get(id=obj.player1.id).firstname
 
     def get_player2_name(self, obj):
+        return obj.player2.name + " " + obj.player2.firstname
         return my_models.TennisPlayer.objects.get(id=obj.player2.id).name + " " + my_models.TennisPlayer.objects.get(id=obj.player2.id).firstname
+
+    def get_winner(seld, obj):
+        return obj.match.winner.id
