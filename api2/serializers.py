@@ -67,6 +67,11 @@ class TennisPlayerDetailSerializer(serializers.ModelSerializer):
         lookup_field='id'
         )
 
+    url_stats_return = serializers.HyperlinkedIdentityField(
+        view_name='api2:tennisPlayer-returnstats',
+        lookup_field='id'
+        )
+
     url_flag = serializers.HyperlinkedIdentityField(
         view_name='api2:tennisPlayer-flag',
         lookup_field='id',
@@ -81,6 +86,7 @@ class TennisPlayerDetailSerializer(serializers.ModelSerializer):
             'nationality',
             'url_match',
             'url_stats',
+            'url_stats_return',
             'url_flag',
             ]
 
@@ -153,6 +159,11 @@ class MatchDetailSerializer(serializers.ModelSerializer):
         lookup_field='id'
         )
 
+    url_predictions = serializers.HyperlinkedIdentityField(
+        view_name='api2:match-predictions',
+        lookup_field='id'
+        )
+
     winner_name=serializers.SerializerMethodField()
     winner_firstname=serializers.SerializerMethodField()
     loser_name=serializers.SerializerMethodField()
@@ -199,6 +210,7 @@ class MatchDetailSerializer(serializers.ModelSerializer):
             'date',
             'round',
             'url_stats',
+            'url_predictions',
             "url_tennisplayersstats",
             'all_match_winner',
             'all_match_loser',
@@ -357,6 +369,25 @@ class Player_StatsSerializer(serializers.ModelSerializer):
             'second_serve_won_percentage',
             'ace_percentage',
             'df_percentage',
+            'firstname',
+            'name',
+            'player_id',
+            ]
+
+class Player_Stats_ReturnSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = my_models.Player_stats_return
+        fields=[
+            'opponent_ace',
+            'opponent_df',
+            'opponent_serve_points',
+            'opponent_first_in',
+            'opponent_first_won',
+            'opponent_second_won',
+            'winning_on_return_percentage',
+            'winning_on_1st_serve_return_percentage',
+            'winning_on_2nd_serve_return_percentage',
             'firstname',
             'name',
             'player_id',
@@ -532,4 +563,19 @@ class CityListSerializer(serializers.ModelSerializer):
             'location_longitude',
             'last_load',
             'url_detail',
+            ]
+
+####################################################################################
+
+class PredictionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = my_models.Prediction
+        fields = [
+            'id',
+            'match',
+            'player1',
+            'player1_proba',
+            'player2',
+            'player2_proba',
             ]

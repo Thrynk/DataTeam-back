@@ -156,6 +156,25 @@ class Player_stats(models.Model):
     def __str__(self):
         return self.player.name
 
+class Player_stats_return(models.Model):
+
+    opponent_ace = models.IntegerField()
+    opponent_df = models.IntegerField()
+    opponent_serve_points = models.IntegerField()
+    opponent_first_in = models.IntegerField()
+    opponent_first_won = models.IntegerField()
+    opponent_second_won = models.IntegerField()
+    winning_on_return_percentage = models.DecimalField(max_digits=15, decimal_places=2)
+    winning_on_1st_serve_return_percentage = models.DecimalField(max_digits=15, decimal_places=2)
+    winning_on_2nd_serve_return_percentage = models.DecimalField(max_digits=15, decimal_places=2)
+    firstname = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
+    player_id = models.BigIntegerField(primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'player_stats_return'
+
 class Prediction(models.Model):
     match= models.ForeignKey(Match, on_delete=models.CASCADE, related_name="match_id")
     player1 = models.ForeignKey(TennisPlayer, on_delete=models.CASCADE, related_name="player1_id")

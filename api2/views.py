@@ -234,6 +234,25 @@ class TennisPlayerStatsView(APIView):
         serializer = self.serializer_class(queryset,context=context)
         return Response(serializer.data)
 
+class TennisPlayerStatsReturnView(APIView):
+    model_class=Player_stats_return
+    serializer_class=Player_Stats_ReturnSerializer
+
+    #def get(self, request, id, format=None):
+    #    return redirect('api2:tennisPlayerStats-detail',id=id)
+
+    def get_object(self, id):
+        try:
+            return self.model_class.objects.get(player_id=id)
+        except self.model_class.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id, format=None):
+        context={"request":request}
+        queryset = self.get_object(id)
+        serializer = self.serializer_class(queryset,context=context)
+        return Response(serializer.data)
+
 class TennisPlayerFlagView(APIView, PaginationClass, FiltreClass):
     model_class=TennisPlayer
 
@@ -396,6 +415,23 @@ class MatchPlayersStatsView(APIView):
             "loser_stats":content_loser.json(),
             }
         return Response(return_data)
+
+class MatchPredictionsView(APIView):
+    model_class=Prediction
+    serializer_class=PredictionSerializer
+
+    def get_object(self, id):
+        try:
+            return self.model_class.objects.get(match_id=id)
+        except self.model_class.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id, format=None):
+        context={"request":request}
+        queryset = self.get_object(id)
+        serializer = self.serializer_class(queryset,context=context)
+        return Response(serializer.data)
+
 
 ###################################################################################
 
