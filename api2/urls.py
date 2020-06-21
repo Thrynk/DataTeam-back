@@ -28,7 +28,7 @@ urlpatterns = [
     path('tennisPlayer/<str:id>/flag/', views.TennisPlayerFlagView.as_view(), name='tennisPlayer-flag'), # renvois le drapeaux du pays du joueur
     path('tennisPlayer/<str:id>/match/', views.TennisPlayerMatchView.as_view(), name='tennisPlayer-match'), # liste tous les matchs du joueur
     path('tennisPlayer/<str:id>/stats/', views.TennisPlayerStatsView.as_view(), name='tennisPlayer-stats'), # liste toutes les stats de services du joueur
-    path('tennisPlayer/<str:id>/returnstats/', views.TennisPlayerStatsReturnView.as_view(), name='tennisPlayer-returnstats'), # liste toutes les stats de retour du joueur
+    path('tennisPlayer/<str:id>/returnstats/', views.TennisPlayerStatsReturnView.as_view(), name='tennisPlayer-returnstats'), # liste toutes les stats de retours du joueur
     
 
     #path('tennisPlayerStats/', views.TennisPlayerStatsListView.as_view(), name='tennisPlayerStats-list'), # liste les stats de tous les joueurs
@@ -39,7 +39,9 @@ urlpatterns = [
     path('match/<str:id>/stats/', views.MatchStatsView.as_view(), name='match-stats'), # liste toutes les stats du match
     path('match/<str:id>/predictions/', views.MatchPredictionsView.as_view(), name='match-predictions'), # liste toutes les stats du match
 
-    path('match/<str:id>/tennisplayersstats/', views.MatchPlayersStatsView.as_view(), name='match-tennisplayersstats'), # liste toutes les stats des deux joueurs du match
+    path('match/<str:id>/tennisplayersstats/', views.MatchPlayersStatsView.as_view(), name='match-tennisplayersstats'), # liste toutes les stats de services des deux joueurs du match
+    path('match/<str:id>/tennisplayersstatsreturn/', views.MatchPlayersStatsReturnView.as_view(), name='match-tennisplayersstatsreturn'),  # liste toutes les stats de retours des deux joueurs du match
+
 
     path('matchStats/', views.MatchStatsListView.as_view(), name='matchStats-list'), # liste les stats de tous les matchs
     path('matchStats/<str:id>/', views.MatchStatsDetailView.as_view(), name='matchStats-detail'), # liste les stats du match n°id

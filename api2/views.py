@@ -416,6 +416,26 @@ class MatchPlayersStatsView(APIView):
             }
         return Response(return_data)
 
+class MatchPlayersStatsReturnView(APIView):
+    def get(self, request, id, format=None):
+        url=request.build_absolute_uri('/api2/match/{id}/'.format(id=str(id)))
+        content = requests.get(url)
+        data = content.json()
+        winner_id=data["winner"]
+        loser_id=data["loser"]
+        #print(winner_id)
+        #print(loser_id)
+        url_winner_stats=request.build_absolute_uri('/api2/tennisPlayer/{id}/returnstats/'.format(id=str(winner_id)))
+        url_loser_stats=request.build_absolute_uri('/api2/tennisPlayer/{id}/returnstats/'.format(id=str(loser_id)))
+        content_winner = requests.get(url_winner_stats)
+        print(content_winner)
+        content_loser = requests.get(url_loser_stats)
+        return_data={
+            "winner_stats":content_winner.json(),
+            "loser_stats":content_loser.json(),
+            }
+        return Response(return_data)
+
 class MatchPredictionsView(APIView):
     model_class=Prediction
     serializer_class=PredictionSerializer

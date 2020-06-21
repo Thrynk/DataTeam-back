@@ -190,6 +190,12 @@ class MatchDetailSerializer(serializers.ModelSerializer):
         lookup_fields=[('id', 'id'),
                         ],
         )
+
+    url_tennisplayersstatsreturn = HyperlinkedIdentityFieldWithLookup_fields(
+        view_name='api2:match-tennisplayersstatsreturn',
+        lookup_fields=[('id', 'id'),
+                        ],
+        )
     
 
     class Meta:
@@ -212,6 +218,7 @@ class MatchDetailSerializer(serializers.ModelSerializer):
             'url_stats',
             'url_predictions',
             "url_tennisplayersstats",
+            "url_tennisplayersstatsreturn",
             'all_match_winner',
             'all_match_loser',
             ]
