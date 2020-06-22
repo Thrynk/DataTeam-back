@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from api.models import * 
+from api2.models import * 
 from .serializers import * 
 
 from datacollection.meteo2 import recup_meteo

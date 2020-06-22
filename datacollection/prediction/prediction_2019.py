@@ -78,7 +78,7 @@ try:
     print("Successfully connected to database")
     
     # create query
-    query = """INSERT INTO api_prediction 
+    query = """INSERT INTO api2_prediction 
         (player1_proba, 
         player2_proba, 
         match_id, 

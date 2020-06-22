@@ -1,6 +1,6 @@
 import os
 import csv
-from api.models import *
+from api2.models import *
 from django.conf import settings
 
 def csv_to_model(csvFile,model):

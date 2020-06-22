@@ -79,7 +79,7 @@ def recup_meteo(latitude, longitude):
         print("Successfully connected to database")
         
         # create query
-        query = """INSERT INTO api_meteo 
+        query = """INSERT INTO api2_meteo 
             (location_latitude, 
             location_longitude, 
             temperature, 
