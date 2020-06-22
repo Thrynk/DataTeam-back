@@ -478,17 +478,18 @@ class TournamentEventDetailSerializer(serializers.ModelSerializer):
 
 class AnecdoteListSerializer(serializers.ModelSerializer):
 
-    url_detail = serializers.HyperlinkedIdentityField(
-        view_name='api2:anecdote-detail',
-        lookup_field='id'
-        )
+    #url_detail = serializers.HyperlinkedIdentityField(
+    #    view_name='api2:anecdote-detail',
+    #    lookup_field='id'
+    #    )
 
     class Meta:
         model = my_models.Anecdote
         fields=[
             'id',
             'title',
-            'url_detail'
+            'content',
+            #'url_detail'
             ]
 
 class AnecdoteDetailSerializer(serializers.ModelSerializer):
