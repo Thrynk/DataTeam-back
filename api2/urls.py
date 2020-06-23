@@ -24,8 +24,8 @@ urlpatterns = [
     path('', views.ApiRootListView.as_view(), name='ApiUrlList'),
 
     path('tennisPlayer/', views.TennisPlayerListView.as_view(), name='tennisPlayer-list'), # liste tous les joueurs de tennis
-    path('tennisPlayer/<str:id>/', views.TennisPlayerDetailView.as_view(), name='tennisPlayer-detail'), # affiche les detail du joueur n°id
-    path('tennisPlayer/<str:id>/flag/', views.TennisPlayerFlagView.as_view(), name='tennisPlayer-flag'), # renvois le drapeaux du pays du joueur
+    path('tennisPlayer/<str:id>/', views.TennisPlayerDetailView.as_view(), name='tennisPlayer-detail'), # affiche les detail sdu joueur n°id
+    path('tennisPlayer/<str:id>/flag/', views.TennisPlayerFlagView.as_view(), name='tennisPlayer-flag'), # renvois le drapeau du pays du joueur
     path('tennisPlayer/<str:id>/match/', views.TennisPlayerMatchView.as_view(), name='tennisPlayer-match'), # liste tous les matchs du joueur
     path('tennisPlayer/<str:id>/stats/', views.TennisPlayerStatsView.as_view(), name='tennisPlayer-stats'), # liste toutes les stats de services du joueur
     path('tennisPlayer/<str:id>/returnstats/', views.TennisPlayerStatsReturnView.as_view(), name='tennisPlayer-returnstats'), # liste toutes les stats de retours du joueur
@@ -35,9 +35,9 @@ urlpatterns = [
     #path('tennisPlayerStats/<str:id>/', views.TennisPlayerStatsDetailView.as_view(), name='tennisPlayerStats-detail'), # liste les stats du joueur n°id
 
     path('match/', views.MatchListView.as_view(), name='match-list'), # liste tous les matchs
-    path('match/<str:id>/', views.MatchDetailView.as_view(), name='match-detail'), # affiche les detail du match n°id
+    path('match/<str:id>/', views.MatchDetailView.as_view(), name='match-detail'), # affiche les details du match n°id
     path('match/<str:id>/stats/', views.MatchStatsView.as_view(), name='match-stats'), # liste toutes les stats du match
-    path('match/<str:id>/predictions/', views.MatchPredictionsView.as_view(), name='match-predictions'), # liste toutes les stats du match
+    path('match/<str:id>/predictions/', views.MatchPredictionsView.as_view(), name='match-predictions'), # liste les prediction sur le vainqueur du match
 
     path('match/<str:id>/tennisplayersstats/', views.MatchPlayersStatsView.as_view(), name='match-tennisplayersstats'), # liste toutes les stats de services des deux joueurs du match
     path('match/<str:id>/tennisplayersstatsreturn/', views.MatchPlayersStatsReturnView.as_view(), name='match-tennisplayersstatsreturn'),  # liste toutes les stats de retours des deux joueurs du match
