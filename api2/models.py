@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 # Create your models here.
 
 # genereation de table sql a l'aide de model django
-# exemple ici la table api_tennisplayer sera crée avec tous ces champs 
+# exemple ici la table api2_tennisplayer sera crée avec tous ces champs 
 class TennisPlayer(models.Model):
 
     #NATIONALITY_CHOICES = (

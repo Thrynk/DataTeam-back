@@ -3,7 +3,7 @@ from rest_framework.reverse import reverse
 
 from django.shortcuts import render, redirect
 
-from api import models as my_models
+from api2 import models as my_models
 
 import requests
 

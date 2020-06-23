@@ -4,7 +4,7 @@ from django.db.models import Q
 
 
 def recup_meteo(latitude, longitude, city=None):
-    from api.models import Meteo , City
+    from api2.models import Meteo , City
     from datetime import datetime 
     from geopy.geocoders import Nominatim
 
